@@ -1,0 +1,17 @@
+{
+	"common": {
+		"appTitle": "NyaNya ゲーム",
+		"logoTitle": "ゲーム"
+	},
+	"languages": {
+		"en-US": "英語",
+		"zh-CN": "中国語(簡体字)",
+		"zh-TW": "中国語(繁体字)",
+		"ja-JP": "日本語",
+		"system": "デバイス言語を使用する"
+	},
+	"killerSudokuPage": {
+		"copy": "コピー",
+		"pageTitle": "キラーナンプレ"
+	}
+}

@@ -1,0 +1,199 @@
+@import './variables.scss';
+
+html {
+	font-family: Roboto, sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+		Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
+		'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+	font-size: 14px;
+
+	@media screen and (max-width: 767px) {
+		font-size: 16px;
+	}
+
+	// CSS变量
+	--primary-color: #f29cb2;
+	--primary-light-color: #e9eefe;
+	--default-color: #f29cb2;
+	--default-hover-color: rgb(36, 118, 219);
+	--default-active-color: #1363c5;
+}
+
+html,
+body {
+	width: 100%;
+	height: 100%;
+	overflow-x: hidden;
+}
+
+.body-modal {
+	overflow: hidden;
+	padding-right: 17px;
+	box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+// input {
+// 	&::-webkit-input-placeholder,
+// 	&::-moz-placeholder,
+// 	&:-ms-input-placeholder,
+// 	&::placeholder {
+// 		// color: #ADD8E6;
+// 		font-size: 16px;
+// 	}
+// }
+
+ul,
+ol {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+}
+
+// 清除浮动
+.clearfix::after,
+.clearfix::before {
+	content: '';
+	display: block;
+	height: 0;
+	line-height: 0;
+	visibility: hidden;
+	overflow: hidden;
+	clear: both;
+}
+
+// 超出部份省略號
+.text-elipsis,
+.text-two-elipsis,
+.text-three-elipsis {
+	//text-overflow: -o-ellipsis-lastline;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+}
+
+.text-elipsis {
+	-webkit-line-clamp: 1;
+	line-clamp: 1;
+}
+
+// 超出部份省略號
+.text-two-elipsis {
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+}
+
+.text-three-elipsis {
+	-webkit-line-clamp: 3;
+	line-clamp: 3;
+}
+
+.text-wrap {
+	// text-overflow: ellipsis;
+	//white-space: wrap;
+	overflow: hidden;
+	word-wrap: break-word;
+}
+
+input[type='button'],
+input[type='submit'],
+input[type='reset'],
+button,
+.mui-btn {
+	outline: none;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.42;
+
+	position: relative;
+
+	display: inline-block;
+
+	margin-bottom: 0;
+	padding: 6px 12px;
+	height: 32px;
+	cursor: pointer;
+	outline: none;
+
+	cursor: pointer;
+	-webkit-transition: all;
+	transition: all;
+	-webkit-transition-timing-function: linear;
+	transition-timing-function: linear;
+	-webkit-transition-duration: 0.2s;
+	transition-duration: 0.2s;
+	text-align: center;
+	vertical-align: top;
+	white-space: nowrap;
+
+	// border-radius: 3px;
+	// border-top-left-radius: 3px;
+	// border-top-right-radius: 3px;
+	// border-bottom-right-radius: 3px;
+	// border-bottom-left-radius: 3px;
+	// border: 1px solid $DefaultColor;
+	// background-color: $DefaultColor !important;
+	// color: @plus-text-color;
+	border: 1px solid rgba(255, 255, 255, 0);
+	// @include heikaBackground(0);
+	background-clip: padding-box;
+}
+
+// .scrollBarHover {
+//   // 修改滚动条
+//   overflow: overlay !important;
+//   &:hover {
+//     // &::-webkit-scrollbar {
+//     //   width: 8px;
+//     //   background-color: rgba(255, 255, 255,1);
+//     // }
+//     // &::-webkit-scrollbar-track {
+//     //  background-color: rgba(255, 255, 255,1);
+//     // }
+//     &::-webkit-scrollbar-thumb {
+//       background-color: rgba(204, 204, 204, 0.4);
+//     }
+//   }
+//   &::-webkit-scrollbar {
+//     width: 8px;
+//     height: 4px;
+//     background-color: rgba(255, 255, 255, 0);
+//     transition: all 0.3s;
+//     cursor: pointer;
+//   }
+//   &::-webkit-scrollbar:hover {
+//     background-color: rgba(0, 128, 0, 0);
+//   }
+
+//   /*定义滚动条轨道 内阴影+圆角*/
+//   &::-webkit-scrollbar-track {
+//     background-color: rgba(255, 255, 255, 0);
+//   }
+
+//   &::-webkit-scrollbar-track:hover {
+//     background-color: rgba(238, 238, 238, 0);
+//   }
+
+//   /*定义滑块 内阴影+圆角*/
+//   &::-webkit-scrollbar-thumb {
+//     border-radius: 4px;
+//     background-color: rgba(221, 221, 221, 0.2);
+//     transition: all 0.3s;
+//   }
+
+//   &::-webkit-scrollbar-thumb:hover {
+//     width: 10px;
+//     border-radius: 4px;
+//     background-color: rgba(204, 204, 204, 1);
+//   }
+// }

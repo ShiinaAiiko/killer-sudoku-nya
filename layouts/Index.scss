@@ -1,0 +1,38 @@
+html,
+body,
+#__next {
+	width: 100%;
+	height: 100%;
+}
+.tool-box-layout {
+	width: 100%;
+	height: 100%;
+	.tb-main {
+		width: 100%;
+		height: calc(100% - 50px);
+		.tb-main-wrap {
+			width: 100%;
+			max-width: 880px;
+      margin: 0 auto;
+		}
+	}
+}
+
+.tool-box-layout-menu-list {
+	.tblml-item {
+		a {
+			font-size: 14px;
+			padding: 14px 16px;
+			display: block;
+			color: #000;
+		}
+	}
+	// width: calc(60px * 3);
+	// display: flex;
+	// flex-direction: row;
+	// flex-wrap: wrap;
+	// .tblml-item {
+	// 	width: 60px;
+	// 	height: 60px;
+	// }
+}
