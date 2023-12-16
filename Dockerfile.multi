@@ -30,7 +30,7 @@ RUN \
   yarn global add spa-http-server --registry https://registry.npmmirror.com/ && \
   tar cvzf /build.tgz  -C /dist .
 
-EXPOSE 23200
+EXPOSE 23300
 
-CMD ["http-server","./dist","--cors","--silent","-p","23200"]
+CMD ["http-server","./dist","--cors","--silent","-p","23300"]
 

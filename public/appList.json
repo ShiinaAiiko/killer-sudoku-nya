@@ -2,12 +2,12 @@
 	"appList": [
 		{
 			"title": {
-				"zh-CN": "杀手数独",
-				"zh-TW": "殺手數獨",
-				"en-US": "Killer Sudoku",
-				"ja-JP": "キラーナンプレ"
+				"zh-CN": "杀手数独喵",
+				"zh-TW": "殺手數獨喵",
+				"en-US": "Killer Sudoku Nya",
+				"ja-JP": "キラーナンプレニャー"
 			},
-			"url": "http://games.aiiko.club"
+			"url": "https://sudoku.aiiko.club/killerSudoku"
 		}
 	]
 }

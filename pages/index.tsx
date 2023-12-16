@@ -8,7 +8,7 @@ const IndexPage = () => {
 	const router = useRouter()
 
 	useEffect(() => {
-		router.replace('/windowsPathToPosixPath')
+		router.replace('/killerSudoku')
 	}, [])
 
 	return (

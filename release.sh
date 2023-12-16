@@ -1,6 +1,6 @@
 #! /bin/bash
 name="nyanya-sudoku"
-port=23200
+port=23300
 branch="main"
 # configFilePath="config.dev.json"
 configFilePath="config.pro.json"

@@ -1,7 +1,7 @@
 {
 	"common": {
-		"appTitle": "NyaNya 遊戲",
-		"logoTitle": "遊戲"
+		"appTitle": "數獨喵",
+		"logoTitle": "數獨喵"
 	},
 	"languages": {
 		"en-US": "英文",
@@ -10,8 +10,12 @@
 		"ja-JP": "日文",
 		"system": "使用設備語言"
 	},
+	"appearance": {
+		"pink": "粉紅色",
+		"blue": "藍色"
+	},
 	"killerSudokuPage": {
-		"pageTitle": "殺手數獨",
+		"pageTitle": "殺手數獨喵",
 		"easy": "簡單",
 		"moderate": "中",
 		"hard": "困難",
@@ -23,11 +27,17 @@
 		"getAnswers": "取得答案",
 		"getAnswersContent": "遊戲中，是否直接解出該數獨？",
 		"solvedSuccessfully": "解題成功!",
-		"solvedSuccessfullyContent": "您已成功解出殺手數獨[${difficulty}難度]，耗時${m}分${s}秒",
-		"newgameContent": "遊戲中，是否創建新的數獨遊戲？"
+		"solvedSuccessfullyContent": "您已成功解出殺手數獨[${difficulty}]，耗時${m}分${s}秒",
+		"newgameContent": "遊戲中，是否創建新的數獨遊戲？",
+
+		"keyboardInput": "鍵盤輸入",
+		"touchInput": "觸控輸入",
+		"generating": "生成中",
+		"generatedSuccessfully": "生成成功!"
 	},
 	"prompt": {
 		"copy": "複製",
+		"share": "分享",
 		"next": "繼續",
 		"back": "後退",
 		"delete": "刪除",

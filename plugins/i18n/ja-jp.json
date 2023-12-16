@@ -1,17 +1,48 @@
 {
 	"common": {
-		"appTitle": "NyaNya ゲーム",
-		"logoTitle": "ゲーム"
+		"appTitle": "ナンプレニャー",
+		"logoTitle": "ナンプレ"
 	},
 	"languages": {
 		"en-US": "英語",
 		"zh-CN": "中国語(簡体字)",
 		"zh-TW": "中国語(繁体字)",
 		"ja-JP": "日本語",
-		"system": "デバイス言語を使用する"
+		"system": "デバイスの設定に従う"
+	},
+	"appearance": {
+		"pink": "ピンク",
+		"blue": "ブルー"
 	},
 	"killerSudokuPage": {
+		"pageTitle": "キラーナンプレニャー",
+		"easy": "イージー",
+		"moderate": "ノーマル",
+		"hard": "ハード",
+		"extreme": "ヘル",
+		"difficulty": "レブル",
+		"newgame": "新規ゲーム",
+		"solve": "解く",
+		"viewAnswers": "解答を見る",
+		"getAnswers": "解答を見る",
+		"getAnswersContent": "今ゲーム中です。解くのを諦めて解答を見ますか？",
+		"solvedSuccessfully": "正解です！おめでとう〜",
+		"solvedSuccessfullyContent": "レブルは[${difficulty}]で、かかった時間は${m}分${s}秒です。",
+		"newgameContent": "今ゲーム中です。新規ゲームを作成しますか？新規ゲームを作成すると、今の進度は失うようになります。",
+
+		"keyboardInput": "キーボード入力",
+		"touchInput": "タッチ入力",
+		"generating": "生成中",
+		"generatedSuccessfully": "生成済み!"
+	},
+	"prompt": {
 		"copy": "コピー",
-		"pageTitle": "キラーナンプレ"
+		"share": "シェア",
+		"next": "次へ",
+		"back": "戻る",
+		"delete": "削除",
+		"cancel": "取り消す",
+		"confirm": "確認",
+		"copySuccessfully": "コピー済みです"
 	}
 }

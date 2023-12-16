@@ -27,7 +27,8 @@ const Init = () => {
 	return (
 		<>
 			<Head>
-				<link rel='icon' href='./favicon.ico' />
+				<link rel='icon' href='./icons/icon.ico' />
+				<link rel='manifest' href='/manifest.json' />
 				<script noModule src={sakiui.jsurl}></script>
 				<script type='module' src={sakiui.esmjsurl}></script>
 				<script noModule src={meowApps.jsurl}></script>

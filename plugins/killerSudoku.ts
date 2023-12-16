@@ -428,8 +428,8 @@ export const generateProblem = (
 	// )
 
 	//  暂时注解
-	let singleCellNum = random(0, 6)
-	singleCellNum = singleCellNum - 3 < 0 ? 0 : singleCellNum - 3
+	let singleCellNum = random(0, 3)
+	// singleCellNum = singleCellNum - 3 < 0 ? 0 : singleCellNum - 3
 
 	console.log('singleCell', singleCell.length, singleCellNum)
 	if (singleCell.length > singleCellNum) {
@@ -1005,7 +1005,7 @@ const generateKillerSudokuSumItem = (
 	val: number
 }[] => {
 	let maxLevel = 3
-	let maxLength = 5
+	let maxLength = 4
 	if (level === maxLevel || list.length > maxLength) {
 		return list
 	}
@@ -1028,19 +1028,32 @@ const generateKillerSudokuSumItem = (
 	// 1、确定哪个坐标开始，从左往右，从上往下，已占用的下一个
 	// 2、确认占用几个（最高4个，指4个方向，优先级是右下左上
 	const numbersRandom = random(0, 100)
-	let number = 1
+	let cellNumber = 1
 	if (numbersRandom < 100 + level * 10 - 1) {
-		number = 3
+		cellNumber = 3
 	}
 	if (numbersRandom < 90 + level * 10 - 1) {
-		number = 2
+		cellNumber = 2
 	}
-	if (numbersRandom < 70 + level * 10 - 1) {
-		number = 1
+	if (numbersRandom < 80 + level * 10 - 1) {
+		cellNumber = 1
 	}
-	if (numbersRandom < 35 && level !== 1) {
-		number = 0
+	if (numbersRandom < 55 && level !== 1) {
+		cellNumber = 0
 	}
+	// if (numbersRandom < 100 + level * 10 - 1) {
+	// 	cellNumber = 3
+	// }
+	// if (numbersRandom < 90 + level * 10 - 1) {
+	// 	cellNumber = 2
+	// }
+	// if (numbersRandom < 75 + level * 10 - 1) {
+	// 	cellNumber = 1
+	// }
+	// if (numbersRandom < 45 && level !== 1) {
+	// 	cellNumber = 0
+	// }
+
 
 	let index = (row - 1) * 9 + col - 1
 
@@ -1053,7 +1066,7 @@ const generateKillerSudokuSumItem = (
 			val: sudoku[index],
 		})
 	}
-	for (let i = 0; i < number; i++) {
+	for (let i = 0; i < cellNumber; i++) {
 		const item = generateProblemAddItem(occupiedList, row, col, 1, [])?.[0]
 		// console.log('item', item)
 		if (item?.row) {
@@ -1084,6 +1097,138 @@ const generateKillerSudokuSumItem = (
 	)
 }
 
+
+// const generateKillerSudokuSumItem = (
+// 	sudoku: number[],
+// 	problem: KillerSudokuProblemItem[],
+// 	occupiedList: number[],
+// 	list: {
+// 		row: number
+// 		col: number
+// 		val: number
+// 	}[],
+// 	row: number,
+// 	col: number,
+// 	// config: {
+// 	// 	level: number
+// 	// 	count: number
+// 	// 	userdIndex: {
+// 	// 		[index: number]: number
+// 	// 	}
+// 	// }
+// 	level: number,
+// 	maxCellNumber: number,
+// 	count: number = 1
+// ): {
+// 	row: number
+// 	col: number
+// 	val: number
+// }[] => {
+// 	let maxLevel = 3
+// 	let maxLength = 5
+// 	if (level === maxLevel || list.length > maxLength) {
+// 		return list
+// 	}
+// 	if (level === 1) {
+// 		let tempIndex = -1
+// 		do {
+// 			tempIndex++
+// 			if (tempIndex >= 81) {
+// 				continue
+// 			}
+// 		} while (occupiedList.includes(tempIndex))
+// 		if (tempIndex >= 81) {
+// 			return list
+// 		}
+
+// 		row = Math.floor(tempIndex / 9) + 1
+// 		col = (tempIndex % 9) + 1
+// 	}
+
+// 	// 1、确定哪个坐标开始，从左往右，从上往下，已占用的下一个
+// 	// 2、确认占用几个（最高4个，指4个方向，优先级是右下左上
+// 	const numbersRandom = random(0, 100)
+// 	let cellNumber = 1
+// 	if (numbersRandom < 100 + level * 10 - 1) {
+// 		cellNumber = 3
+// 	}
+// 	if (numbersRandom < 90 + level * 10 - 1) {
+// 		cellNumber = 2
+// 	}
+// 	if (numbersRandom < 75 + level * 10 - 1) {
+// 		cellNumber = 1
+// 	}
+// 	if (numbersRandom < 35 && level !== 1) {
+// 		cellNumber = 0
+// 	}
+// 	if (!maxCellNumber) {
+// 		if (numbersRandom < 100) {
+// 			maxCellNumber = 5
+// 		}
+// 		if (numbersRandom < 95) {
+// 			maxCellNumber = 4
+// 		}
+// 		if (numbersRandom < 90) {
+// 			maxCellNumber = 3
+// 		}
+// 		if (numbersRandom < 52) {
+// 			maxCellNumber = 2
+// 		}
+// 		if (numbersRandom < 5) {
+// 			maxCellNumber = 1
+// 		}
+// 	}
+// 	console.log(
+// 		'maxCellNumber',
+// 		maxCellNumber,
+// 		list.length,
+// 		occupiedList,
+// 		numbersRandom,
+// 		cellNumber
+// 	)
+
+// 	let index = (row - 1) * 9 + col - 1
+
+// 	// console.log('number', number, numbersRandom)
+// 	if (!occupiedList.includes(index) && list.length < 5) {
+// 		occupiedList.push(index)
+// 		list.push({
+// 			row,
+// 			col,
+// 			val: sudoku[index],
+// 		})
+// 	}
+// 	for (let i = 0; i < cellNumber; i++) {
+// 		const item = generateProblemAddItem(occupiedList, row, col, 1, [])?.[0]
+// 		// console.log('item', item)
+// 		if (item?.row) {
+// 			if (!occupiedList.includes(item.index) && list.length < maxLength) {
+// 				occupiedList.push(item.index)
+// 				list.push({
+// 					row: item.row,
+// 					col: item.col,
+// 					val: sudoku[item.index],
+// 				})
+// 			}
+// 		}
+// 	}
+
+// 	const nextItem = list[list.length - random(1, 2)]
+
+// 	// 3、确认走哪个坐标继续走，右下左上，然后循环。最多不超过5个
+
+// 	return generateKillerSudokuSumItem(
+// 		sudoku,
+// 		problem,
+// 		occupiedList,
+// 		list,
+// 		nextItem.row,
+// 		nextItem.col,
+// 		level + 1,
+// 		maxCellNumber,
+// 		count + 1
+// 	)
+// }
 const restoreOccupiedList = (
 	tempList: KillerSudokuProblemItem[],
 	occupiedList: number[]
@@ -1276,242 +1421,3 @@ export const killerSudoku = {
 }
 
 export default killerSudoku
-
-// const generateProblemFunc = (
-// 	sudoku: number[],
-// 	problem: KillerSudokuProblemItem[],
-// 	occupiedList: number[],
-// 	list: {
-// 		row: number
-// 		col: number
-// 		val: number
-// 	}[],
-// 	currentItem: {
-// 		row: number
-// 		col: number
-// 	},
-// 	config: {
-// 		level: number
-// 		count: number
-// 		userdIndex: {
-// 			[index: number]: number
-// 		}
-// 	}
-// ): KillerSudokuProblemItem[] => {
-// 	config.count++
-// 	if (config.count > 1000) {
-// 		console.error('强制结束')
-// 		return problem
-// 	}
-// 	if (config.level === 1) {
-// 		let tempIndex = -1
-// 		do {
-// 			tempIndex++
-// 			// tempIndex = random(0, 80)
-// 			// console.log('tempIndex', tempIndex)
-// 			if (tempIndex >= 81) {
-// 				continue
-// 			}
-// 		} while (
-// 			occupiedList.includes(tempIndex) ||
-// 			config.userdIndex[tempIndex] > 3
-// 		)
-// 		// console.log('tempIndex', tempIndex, {
-// 		// 	row: Math.floor(tempIndex / 9) + 1,
-// 		// 	col: (tempIndex % 9) + 1,
-// 		// })
-// 		if (tempIndex >= 81) {
-// 			return problem
-// 		}
-// 		!config.userdIndex[tempIndex] && (config.userdIndex[tempIndex] = 0)
-// 		config.userdIndex[tempIndex]++
-
-// 		currentItem.row = Math.floor(tempIndex / 9) + 1
-// 		currentItem.col = (tempIndex % 9) + 1
-// 		// console.log(
-// 		// 	'tempIndex',
-// 		// 	tempIndex,
-// 		// 	currentItem,
-// 		// 	{
-// 		// 		row: Math.floor(tempIndex / 9) + 1,
-// 		// 		col: (tempIndex % 9) + 1,
-// 		// 	},
-// 		// 	occupiedList
-// 		// )
-// 	}
-// 	let index = (currentItem.row - 1) * 9 + currentItem.col - 1
-// 	let row = currentItem.row
-// 	let col = currentItem.col
-// 	// console.log('level', config.level)
-// 	if (config.level > 2 || list.length >= 5) {
-// 		// console.log(answser, occupiedList, list, currentItem)
-// 		const tempAnswer = [...problem]
-// 		const answerItem = {
-// 			type: 'Sum',
-// 			val: list.reduce((pv, cv) => pv + cv.val, 0),
-// 			list: list.map((v) => {
-// 				return { row: v.row, col: v.col }
-// 			}),
-// 		}
-// 		tempAnswer.push(answerItem as any)
-
-// 		new Array(81)
-// 			.fill(0)
-// 			.map((_, i) => {
-// 				if (occupiedList.includes(i)) {
-// 					return -1
-// 				}
-// 				return i
-// 			})
-// 			.filter((v) => v >= 0)
-// 			.forEach((i) => {
-// 				tempAnswer.push({
-// 					type: 'Sum',
-// 					val: sudoku[i],
-// 					list: [
-// 						{
-// 							row: Math.floor(i / 9) + 1,
-// 							col: (i % 9) + 1,
-// 						},
-// 					],
-// 				})
-// 			})
-
-// 		// if (config.count % 12 === 0) {
-// 		console.time('killerSudoku.solve')
-// 		const ans = solve(
-// 			tempAnswer.map((v) => {
-// 				return {
-// 					type: v.type,
-// 					val: v.val,
-// 					list: v.list.map((sv) => {
-// 						return {
-// 							row: sv.row,
-// 							col: sv.col,
-// 							val: 0,
-// 							// val: sudoku[(sv.row - 1) * 9 + sv.col - 1],
-// 						}
-// 					}),
-// 				}
-// 			})
-// 		)
-
-// 		console.log('ans', config.count, tempAnswer.length)
-// 		console.timeEnd('killerSudoku.solve')
-// 		if (ans.length !== 1) {
-// 			// 返回到上一级
-// 			// 通过answer数组分析
-// 			const occupiedListTemp: number[] = []
-// 			problem.forEach((v) => {
-// 				v.list.forEach((sv) => {
-// 					occupiedListTemp.push((sv.row - 1) * 9 + sv.col - 1)
-// 				})
-// 			})
-
-// 			config.level = 1
-
-// 			return generateProblemFunc(
-// 				sudoku,
-// 				problem,
-// 				occupiedListTemp,
-// 				[],
-// 				currentItem,
-// 				config
-// 			)
-// 		}
-// 		// }
-
-// 		// const singleCell = answser.filter((v) => v.list.length === 1)
-
-// 		// console.log(
-// 		// 	'answser=>',
-
-// 		// 	list.length,
-// 		// 	'dlx个数',
-// 		// 	ans.length,
-// 		// 	singleCell.length,
-// 		// 	list,
-// 		// 	tempAnswer.length,
-// 		// 	config.level
-// 		// )
-// 		// if (tempAnswer.length < 40) {
-// 		// 	return
-// 		// }
-// 		problem.push(answerItem as any)
-
-// 		// return
-// 		// 下一个sum
-// 		config.level = 1
-
-// 		return generateProblemFunc(
-// 			sudoku,
-// 			problem,
-// 			occupiedList,
-// 			[],
-// 			{
-// 				row: 0,
-// 				col: 0,
-// 				// row: Math.floor(tempIndex / 9) + 1,
-// 				// col: (tempIndex % 9) + 1,
-// 			},
-// 			config
-// 		)
-// 	}
-// 	// 1、确定哪个坐标开始，从左往右，从上往下，已占用的下一个
-// 	// 2、确认占用几个（最高4个，指4个方向，优先级是右下左上
-// 	const numbersRandom = random(0, 100)
-// 	let number = 0
-// 	if (numbersRandom < 100 + config.level * 10 - 1) {
-// 		number = 3
-// 	}
-// 	if (numbersRandom < 90 + config.level * 10 - 1) {
-// 		number = 2
-// 	}
-// 	if (numbersRandom < 70 + config.level * 10 - 1) {
-// 		number = 1
-// 	}
-// 	if (numbersRandom < 30) {
-// 		number = 0
-// 	}
-
-// 	// console.log('number', number, numbersRandom)
-// 	if (!occupiedList.includes(index) && list.length < 5) {
-// 		occupiedList.push(index)
-// 		list.push({
-// 			row,
-// 			col,
-// 			val: sudoku[index],
-// 		})
-// 	}
-// 	for (let i = 0; i < number; i++) {
-// 		const item = generateProblemAddItem(occupiedList, row, col, 1, [])?.[0]
-// 		// console.log('item', item)
-// 		if (item?.row) {
-// 			if (!occupiedList.includes(item.index) && list.length < 5) {
-// 				occupiedList.push(item.index)
-// 				list.push({
-// 					row: item.row,
-// 					col: item.col,
-// 					val: sudoku[item.index],
-// 				})
-// 			}
-// 		}
-// 	}
-
-// 	const nextItem = list[list.length - random(1, 2)]
-// 	config.level++
-
-// 	// 3、确认走哪个坐标继续走，右下左上，然后循环。最多不超过5个
-
-// 	return generateProblemFunc(
-// 		sudoku,
-// 		problem,
-// 		occupiedList,
-// 		list,
-// 		{
-// 			row: nextItem.row,
-// 			col: nextItem.col,
-// 		},
-// 		config
-// 	)
-// }

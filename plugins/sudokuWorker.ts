@@ -21,8 +21,8 @@ self.addEventListener('message', async (e) => {
 	// console.log(el)
 	// let i = 0
 	// do {
-  //   console.log(i)
-  //   i++
+	//   console.log(i)
+	//   i++
 	// } while (i < 1000000000)
 	// const res = await fetch('http://192.168.204.129:23300/generateSudoku')
 
@@ -30,3 +30,5 @@ self.addEventListener('message', async (e) => {
 	// generateKillerSudoku()
 	self.postMessage('Greeting from Worker.js') // 向主线程发送消息
 })
+const a = 0
+export default a

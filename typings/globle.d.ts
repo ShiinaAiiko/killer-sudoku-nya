@@ -40,7 +40,8 @@ declare global {
 			'saki-chat-layout-bottom-navigator': any
 			'saki-chat-layout': any
 			'saki-chat-layout-bottom-navigator-item': any
-			'saki-icon': any
+      'saki-icon': any
+      "saki-dialog-progress-bar": any
 		}
 	}
 	namespace Window {

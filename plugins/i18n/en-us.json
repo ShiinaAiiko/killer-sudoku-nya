@@ -1,7 +1,7 @@
 {
 	"common": {
-		"appTitle": "NyaNya Game",
-		"logoTitle": "Game"
+		"appTitle": "Sudoku Nya",
+		"logoTitle": "Sudoku"
 	},
 	"languages": {
 		"en-US": "English",
@@ -10,8 +10,12 @@
 		"ja-JP": "Japanese",
 		"system": "Use device language"
 	},
+	"appearance": {
+		"pink": "Pink",
+		"blue": "Blue"
+	},
 	"killerSudokuPage": {
-		"pageTitle": "Killer Sudoku",
+		"pageTitle": "Killer Sudoku Nya",
 		"easy": "Easy",
 		"moderate": "Moderate",
 		"hard": "Hard",
@@ -24,10 +28,16 @@
 		"getAnswersContent": "Playing now, Did you solve the Sudoku?",
 		"solvedSuccessfully": "Solved successfully!",
 		"solvedSuccessfullyContent": "You have successfully solved Killer Sudoku[${difficulty}], Time: ${m} minutes and ${s} seconds",
-		"newgameContent": "Playing now, do you want to create a new Sudoku game?"
+		"newgameContent": "Playing now, do you want to create a new Sudoku game?",
+
+		"keyboardInput": "Keyboard input",
+		"touchInput": "Touch input",
+		"generating": "Generating",
+		"generatedSuccessfully": "Generated successfully!"
 	},
 	"prompt": {
 		"copy": "Copy",
+		"share": "Share",
 		"next": "Next",
 		"back": "Back",
 		"delete": "Delete",

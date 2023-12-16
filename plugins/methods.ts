@@ -63,3 +63,21 @@ export const getRandomPassword = (
 	}
 	return str
 }
+export const Query = (
+	url: string,
+	query: {
+		[k: string]: string
+	}
+) => {
+	let obj: {
+		[k: string]: string
+	} = {}
+	let o = Object.assign(obj, query)
+	let s = qs.stringify(
+		Object.keys(o).reduce(
+			(fin, cur) => (o[cur] !== '' ? { ...fin, [cur]: o[cur] } : fin),
+			{}
+		)
+	)
+	return url + (s ? '?' + s : '')
+}

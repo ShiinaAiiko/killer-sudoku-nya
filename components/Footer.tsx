@@ -13,6 +13,8 @@ import {
 } from '../store'
 import { useTranslation } from 'react-i18next'
 import { bindEvent } from '@saki-ui/core'
+import { Query } from '../plugins/methods'
+import { appearanceColors } from '../store/config'
 
 const FooterComponent = (): JSX.Element => {
 	const { t, i18n } = useTranslation()
@@ -26,6 +28,7 @@ const FooterComponent = (): JSX.Element => {
 	const config = useSelector((state: RootState) => state.config)
 	const dispatch = useDispatch<AppDispatch>()
 	const [showLanguageDropdown, setShowLanguageDropdown] = useState(false)
+	const [showAppearanceDropdown, setShowAppearanceDropdown] = useState(false)
 	return (
 		<div className='footer-component'>
 			<div className='f-left'>
@@ -59,34 +62,21 @@ const FooterComponent = (): JSX.Element => {
 											ns: 'languages',
 										})}
 									</span>
-									<svg
-										className='icon'
-										viewBox='0 0 1024 1024'
-										version='1.1'
-										xmlns='http://www.w3.org/2000/svg'
-										p-id='1644'
-									>
-										<path
-											d='M725.333333 426.666667L512 640 298.666667 426.666667z'
-											p-id='1645'
-										></path>
-									</svg>
+									<saki-icon type='BottomTriangle'></saki-icon>
 								</div>
 							</saki-button>
 							<div slot='main'>
 								<saki-menu
 									ref={bindEvent({
 										selectvalue: async (e) => {
-											dispatch(methods.config.setLanguage(e.detail.value))
-											switch (e.detail.value) {
-												case 'logout':
-													break
-												case 'deleteDevice':
-													break
+											router.replace(
+												Query('/killerSudoku', {
+													...router.query,
+													lang: e.detail.value,
+												})
+											)
+											// dispatch(methods.config.setLanguage(e.detail.value))
 
-												default:
-													break
-											}
 											setShowLanguageDropdown(false)
 										},
 									})}
@@ -98,6 +88,7 @@ const FooterComponent = (): JSX.Element => {
 												padding='10px 18px'
 												font-size='14px'
 												value={v}
+												active={config.language === v}
 											>
 												<div
 													style={{
@@ -129,6 +120,82 @@ const FooterComponent = (): JSX.Element => {
 						''
 					)}
 				</div>
+				<div className='f-appearance'>
+					{mounted ? (
+						<saki-dropdown
+							visible={showAppearanceDropdown}
+							floating-direction='Center'
+							ref={bindEvent({
+								close: () => {
+									setShowAppearanceDropdown(false)
+								},
+							})}
+						>
+							<saki-button
+								ref={bindEvent({
+									tap: () => {
+										console.log('more')
+										setShowAppearanceDropdown(true)
+									},
+								})}
+								bg-color='transparent'
+								padding='10px 6px 10px 12px'
+								title='Language'
+								border='none'
+								type='Normal'
+							>
+								<div className='f-l-button'>
+									<span>
+										{t(config.appearance, {
+											ns: 'appearance',
+										})}
+									</span>
+									<saki-icon type='BottomTriangle'></saki-icon>
+								</div>
+							</saki-button>
+							<div slot='main'>
+								<saki-menu
+									ref={bindEvent({
+										selectvalue: async (e) => {
+											dispatch(
+												configSlice.actions.setAppearance(e.detail.value)
+											)
+
+											setShowAppearanceDropdown(false)
+										},
+									})}
+								>
+									{config.appearances.map((v) => {
+										return (
+											<saki-menu-item
+												key={v}
+												padding='10px 18px'
+												font-size='14px'
+												value={v}
+												active={config.appearance === v}
+											>
+												<div
+													style={{
+														cursor: 'pointer',
+														color: (appearanceColors as any)[v],
+													}}
+												>
+													<span>
+														{t(v, {
+															ns: 'appearance',
+														})}
+													</span>
+												</div>
+											</saki-menu-item>
+										)
+									})}
+								</saki-menu>
+							</div>
+						</saki-dropdown>
+					) : (
+						''
+					)}
+				</div>
 			</div>
 			<div className='f-right'>
 				<div className='f-r-copyright'>
@@ -141,7 +208,7 @@ const FooterComponent = (): JSX.Element => {
 					<span> - </span>
 					<a
 						target='_blank'
-						href='https://github.com/ShiinaAiiko/nyanya-toolbox'
+						href='https://github.com/ShiinaAiiko/killer-sudoku-nya'
 					>
 						{/* {t('aiikoBlog', {
 												ns: 'common',

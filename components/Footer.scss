@@ -1,10 +1,17 @@
 .footer-component {
-  width: 100%;
+	width: 100%;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	margin-bottom: 10px;
 	.f-left {
-		.f-language {
+		display: flex;
+		flex-wrap: wrap;
+		& > div {
+			margin-right: 4px;
+		}
+		.f-language,
+		.f-appearance {
 			.f-l-button {
 				display: flex;
 				justify-content: center;

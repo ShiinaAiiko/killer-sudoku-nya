@@ -11,8 +11,8 @@ import { Languages, languages, defaultLanguage } from '../plugins/i18n/i18n'
 import { storage } from './storage'
 export const configMethods = {
 	init: createAsyncThunk('config/init', async (_, thunkAPI) => {
-		const language = (await storage.global.get('language')) || 'system'
-		thunkAPI.dispatch(configMethods.setLanguage(language))
+		// const language = (await storage.global.get('language')) || 'system'
+		// thunkAPI.dispatch(configMethods.setLanguage(language))
 
 		thunkAPI.dispatch(configMethods.getDeviceType())
 	}),
@@ -73,21 +73,49 @@ export type LanguageType = Languages | 'system'
 export let deviceType: DeviceType | undefined
 
 export const language: LanguageType = defaultLanguage as any
+export const appearances = ['Pink', 'Blue']
+export const appearanceColors = {
+	Pink: '#f29cb2',
+	Blue: '#3393ce',
+}
 
 const state = {
 	language: language,
 	lang: '',
 	languages: ['system', ...languages],
 	deviceType,
+	loadStatus: {
+		sakiUI: false,
+	},
 	window: {
 		width: 0,
 		height: 0,
 	},
+	appearances,
+	appearance: 'Pink' as 'Pink' | 'Blue',
 }
 export const configSlice = createSlice({
 	name: 'config',
 	initialState: state,
 	reducers: {
+		setSakiUILoadStatus: (
+			state,
+			params: {
+				payload: boolean
+				type: string
+			}
+		) => {
+			state.loadStatus.sakiUI = params.payload
+		},
+		setAppearance: (
+			state,
+			params: {
+				payload: (typeof state)['appearance']
+				type: string
+			}
+		) => {
+			state.appearance = params.payload
+		},
 		setLanguage: (
 			state,
 			params: {

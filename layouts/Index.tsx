@@ -18,6 +18,10 @@ import { userAgent, CipherSignature, NyaNyaWasm } from '@nyanyajs/utils'
 import debounce from '@nyanyajs/utils/dist/debounce'
 import * as nyanyalog from 'nyanyajs-log'
 import HeaderComponent from '../components/Header'
+import { bindEvent } from '@saki-ui/core'
+import { language } from '../store/config'
+import { storage } from '../store/storage'
+import { languages } from '../plugins/i18n/i18n'
 // import parserFunc from 'ua-parser-js'
 
 const ToolboxLayout = ({ children }: propsType): JSX.Element => {
@@ -25,7 +29,8 @@ const ToolboxLayout = ({ children }: propsType): JSX.Element => {
 	const [mounted, setMounted] = useState(false)
 	// console.log('Index Layout')
 
-	// const cccc = useSelector((state: RootState) => state.)
+	const router = useRouter()
+	const config = useSelector((state: RootState) => state.config)
 	const dispatch = useDispatch<AppDispatch>()
 
 	const [showLanguageDropdown, setShowLanguageDropdown] = useState(false)
@@ -41,8 +46,29 @@ const ToolboxLayout = ({ children }: propsType): JSX.Element => {
 	const initNyaNyaWasm = async () => {
 		NyaNyaWasm.setWasmPath('./nyanyajs-utils-wasm.wasm')
 		NyaNyaWasm.setCoreJsPath('./wasm_exec.js')
-
 	}
+
+	useEffect(() => {
+		const init = async () => {
+			if (!router.isReady) return
+
+			const queryLang = String(router.query.lang)
+				? String(router.query.lang)
+						.split('-')
+						.map((v, i) => {
+							return i === 1 ? v.toUpperCase() : v
+						})
+						.join('-')
+				: ''
+			const lang = config.languages.includes(queryLang as any)
+				? (queryLang as any)
+				: (await storage.global.get('language')) || 'system'
+			// console.log('lang', lang, config.languages, queryLang, router.query)
+			dispatch(methods.config.setLanguage(lang))
+		}
+		init()
+	}, [router.query.lang])
+
 	return (
 		<>
 			<Head>
@@ -54,6 +80,22 @@ const ToolboxLayout = ({ children }: propsType): JSX.Element => {
 			</Head>
 			<div className='tool-box-layout'>
 				<>
+					{mounted ? (
+						<>
+							<saki-dialog-progress-bar></saki-dialog-progress-bar>
+							<saki-init
+								ref={bindEvent({
+									mounted() {
+										dispatch(configSlice.actions.setSakiUILoadStatus(true))
+										// setProgressBar(progressBar + 0.2 >= 1 ? 1 : progressBar + 0.2)
+										// setProgressBar(.6)
+									},
+								})}
+							></saki-init>
+						</>
+					) : (
+						''
+					)}
 					{mounted ? <saki-base-style></saki-base-style> : ''}
 
 					<HeaderComponent visible={true} fixed={false}></HeaderComponent>
