@@ -1,7 +1,7 @@
 {
 	"common": {
-		"appTitle": "Sudoku Nya",
-		"logoTitle": "Sudoku"
+		"appTitle": "NyaNya Game",
+		"logoTitle": "Game"
 	},
 	"languages": {
 		"en-US": "English",
@@ -33,7 +33,31 @@
 		"keyboardInput": "Keyboard input",
 		"touchInput": "Touch input",
 		"generating": "Generating",
-		"generatedSuccessfully": "Generated successfully!"
+		"generatedSuccessfully": "Generated successfully!",
+
+		"playNewGame": "Play New Game",
+
+		"normalShare": "Normal sharing",
+		"shareProblem": "Share with question",
+		"shareProblemContent": "Do you want to invite friends to play this Sudoku problem together? (Friends can play this Sudoku problem by opening the link)",
+
+		"aboutSudoku": "About Sudoku",
+		"aboutSudokuContent1": "Sudoku (すうどく) is a mathematical logic game. The game consists of a 9×9 grid. Players need to deduce the numbers in other grids based on the numbers provided by the grid.",
+		"aboutSudokuContent2": "This kind of game only requires logical thinking skills and has nothing to do with number operations, so it is also suitable for people who are not good at mathematics. Although the gameplay is simple, the numbers provided are ever-changing, so many educators believe that Sudoku is a good way to exercise their brains.",
+		"sudokuGameRule": "Sudoku Game Rules",
+		"sudokuGameRuleContent1": "The Sudoku game consists of nine 3×3 nine-square grids, with a total of 9 palaces, 9 rows, 9 columns and 81 grids.",
+		"sudokuGameRuleContent2": "The numbers in each house, row, and column must contain 1 to 9, and cannot be missing or repeated.",
+		"sudokuGameRuleContent3": "When all the grids are filled with numbers that comply with the rules, the game is deemed to have been passed.",
+		"aboutKillerSudoku": "About Killer Sudoku",
+		"aboutKillerSudokuContent1": "Killer Sudoku (キラーナンプレ) is a variant derived from Sudoku. It combines the gameplay of Sudoku and Kakuro.",
+		"killerSudokuRule": "Killer Sudoku Game Rules",
+		"killerSudokuRuleContent1": "Killer Sudoku adds “zone” based on ordinary Sudoku rules, divided by dotted lines. The subscript in the upper left corner of the dotted box is the sum of the zone. The sum of the zone must be the same as the sum of the numbers it contains.",
+		"killerSudokuRuleContent2": "The numbers contained in the zone will not be repeated.",
+		"killerSudokuRuleContent3": "Common sums and the numbers they contain are:",
+		"killerSudokuRuleContent4": "${number} cells",
+		"killerSudokuRuleContent5": "Larger numbers occur infrequently and are of little use.",
+		"welcomeToPlay": "Hope you have a great time!",
+		"fromWiki": "From Wikipedia"
 	},
 	"prompt": {
 		"copy": "Copy",
@@ -43,6 +67,11 @@
 		"delete": "Delete",
 		"cancel": "Cancel",
 		"confirm": "Confirm",
-		"copySuccessfully": "Copy successfully!"
+		"copySuccessfully": "Copy successfully!",
+
+		"savedGame": "Saved game",
+		"savedGameContent": "Do you want to continue your previous Sudoku game?",
+		"yes": "Yes",
+		"no": "No"
 	}
 }

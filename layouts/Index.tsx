@@ -50,7 +50,17 @@ const ToolboxLayout = ({ children }: propsType): JSX.Element => {
 
 	useEffect(() => {
 		const init = async () => {
-			if (!router.isReady) return
+      if (!router.isReady) {
+        // console.log('lang设置1')
+        
+				// dispatch(
+				// 	methods.config.setLanguage(
+				// 		(await storage.global.get('language')) || 'system'
+				// 	)
+        // )
+        // console.log('lang设置')
+				return
+			}
 
 			const queryLang = String(router.query.lang)
 				? String(router.query.lang)
@@ -63,11 +73,11 @@ const ToolboxLayout = ({ children }: propsType): JSX.Element => {
 			const lang = config.languages.includes(queryLang as any)
 				? (queryLang as any)
 				: (await storage.global.get('language')) || 'system'
-			// console.log('lang', lang, config.languages, queryLang, router.query)
+			console.log('lang', lang, config.languages, queryLang, router.query)
 			dispatch(methods.config.setLanguage(lang))
 		}
 		init()
-	}, [router.query.lang])
+	}, [router.query])
 
 	return (
 		<>

@@ -14,6 +14,11 @@ export const configMethods = {
 		// const language = (await storage.global.get('language')) || 'system'
 		// thunkAPI.dispatch(configMethods.setLanguage(language))
 
+		thunkAPI.dispatch(
+			configSlice.actions.setAppearance(
+				(await storage.global.get('appearance')) || 'Pink'
+			)
+		)
 		thunkAPI.dispatch(configMethods.getDeviceType())
 	}),
 	setLanguage: createAsyncThunk(
@@ -115,6 +120,7 @@ export const configSlice = createSlice({
 			}
 		) => {
 			state.appearance = params.payload
+			storage.global.setSync('appearance', params.payload)
 		},
 		setLanguage: (
 			state,

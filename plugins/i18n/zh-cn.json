@@ -1,7 +1,7 @@
 {
 	"common": {
-		"appTitle": "数独喵",
-		"logoTitle": "数独"
+		"appTitle": "NyaNya 游戏",
+		"logoTitle": "游戏"
 	},
 	"languages": {
 		"en-US": "英文",
@@ -33,7 +33,31 @@
 		"keyboardInput": "键盘输入",
 		"touchInput": "触屏输入",
 		"generating": "生成中",
-		"generatedSuccessfully": "生成成功!"
+		"generatedSuccessfully": "生成成功!",
+
+		"playNewGame": "开始游戏",
+
+		"normalShare": "正常分享",
+		"shareProblem": "与问题一起分享",
+		"shareProblemContent": "是否邀请好友一起玩此数独问题？(好友打开链接即可直接玩此数独问题）",
+
+		"aboutSudoku": "关于数独",
+		"aboutSudokuContent1": "数独（Sudoku / すうどく）是一种数学逻辑游戏，游戏由9×9个格子组成，玩家需要根据格子提供的数字推理出其他格子的数字。",
+		"aboutSudokuContent2": "这种游戏只需要逻辑思维能力，与数字运算无关，所以数学不好的人也很适合。虽然玩法简单，但提供的数字却千变万化，所以不少教育者认为数独是锻炼脑筋的好方法。",
+		"sudokuGameRule": "数独游戏规则",
+		"sudokuGameRuleContent1": "数独游戏由9个3×3个的九宫格组成，共有9宫9行9列81格。",
+		"sudokuGameRuleContent2": "每一宫、每一行、每一列的数字均须包含 1～9，不能缺少，也不能重复。",
+		"sudokuGameRuleContent3": "当所有格子都被填充上符合规则的数字后，则视为游戏通关。",
+		"aboutKillerSudoku": "关于杀手数独",
+		"aboutKillerSudokuContent1": "杀手数独（Killer Sudoku / キラーナンプレ）是从数独衍生出的变种。它结合了数独（Sudoku）和数和（Kakuro）的玩法。",
+		"killerSudokuRule": "杀手数独游戏规则",
+		"killerSudokuRuleContent1": "杀手数独在普通数独规则基础上增加了“区”，以虚线划分，虚线框左上角的角标即是该区的和，区的总和必须和它所包含数字之和相同。",
+		"killerSudokuRuleContent2": "区所包含的数字不会出现重复的情况。",
+		"killerSudokuRuleContent3": "常见的和与其包含的数字如下：",
+		"killerSudokuRuleContent4": "${number}个数字的区",
+		"killerSudokuRuleContent5": "更大的数不常出现且用途不大。",
+		"welcomeToPlay": "希望你玩的开心！",
+		"fromWiki": "部分介绍源自Wikipedia"
 	},
 	"prompt": {
 		"copy": "复制",
@@ -43,6 +67,11 @@
 		"delete": "删除",
 		"cancel": "取消",
 		"confirm": "确认",
-		"copySuccessfully": "复制成功！"
+		"copySuccessfully": "复制成功！",
+
+		"savedGame": "已保存的游戏",
+		"savedGameContent": "你还想继续之前的数独游戏吗?",
+		"yes": "是的",
+		"no": "算了"
 	}
 }

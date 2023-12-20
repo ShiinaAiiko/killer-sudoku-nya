@@ -12,18 +12,19 @@ import { apiSlice, apiMethods } from './api'
 import { userSlice, userMethods } from './user'
 import { layoutSlice, layoutMethods } from './layout'
 import { configSlice, configMethods } from './config'
+import { gameSlice, gameMethods } from './game'
 
 export interface ActionParams<T = any> {
 	type: string
 	payload: T
 }
 
-
 const rootReducer = combineReducers({
 	api: apiSlice.reducer,
 	user: userSlice.reducer,
 	layout: layoutSlice.reducer,
 	config: configSlice.reducer,
+	game: gameSlice.reducer,
 })
 
 const store = configureStore({
@@ -36,6 +37,7 @@ export const methods = {
 	user: userMethods,
 	layout: layoutMethods,
 	config: configMethods,
+	game: gameMethods,
 }
 
 // console.log(store.getState())

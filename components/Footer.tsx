@@ -146,7 +146,7 @@ const FooterComponent = (): JSX.Element => {
 							>
 								<div className='f-l-button'>
 									<span>
-										{t(config.appearance, {
+										{t(config.appearance.toLowerCase(), {
 											ns: 'appearance',
 										})}
 									</span>
@@ -181,7 +181,7 @@ const FooterComponent = (): JSX.Element => {
 													}}
 												>
 													<span>
-														{t(v, {
+														{t(v.toLowerCase(), {
 															ns: 'appearance',
 														})}
 													</span>

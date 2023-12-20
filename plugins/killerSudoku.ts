@@ -6,7 +6,6 @@ import {
 	general,
 } from './sudoku'
 import dlx from './dlx'
-import { deepCopy } from '@nyanyajs/utils'
 
 export interface KillerSudokuProblemItem {
 	type: 'Sum'

@@ -1,7 +1,7 @@
 {
 	"common": {
-		"appTitle": "數獨喵",
-		"logoTitle": "數獨喵"
+		"appTitle": "NyaNya 遊戲",
+		"logoTitle": "遊戲"
 	},
 	"languages": {
 		"en-US": "英文",
@@ -11,7 +11,7 @@
 		"system": "使用設備語言"
 	},
 	"appearance": {
-		"pink": "粉紅色",
+		"pink": "粉色",
 		"blue": "藍色"
 	},
 	"killerSudokuPage": {
@@ -33,7 +33,31 @@
 		"keyboardInput": "鍵盤輸入",
 		"touchInput": "觸控輸入",
 		"generating": "生成中",
-		"generatedSuccessfully": "生成成功!"
+		"generatedSuccessfully": "生成成功!",
+
+		"playNewGame": "开始游戏",
+
+		"normalShare": "正常分享",
+		"shareProblem": "與問題分享",
+		"shareProblemContent": "是否邀請好友一起玩此數獨問題？(好友打開連結即可直接玩此數獨問題）",
+
+		"aboutSudoku": "關於數獨",
+		"aboutSudokuContent1": "數獨（Sudoku / すうどく）是一種數學邏輯遊戲，遊戲由9×9個格子組成，玩家需要根據格子提供的數字推理出其他格子的數字。",
+		"aboutSudokuContent2": "這種遊戲只需要邏輯思維能力，與數字運算無關，所以數學不好的人也很適合。雖然玩法簡單，但提供的數字卻千變萬化，所以不少教育者認為數獨是鍛煉 腦筋的好方法。",
+		"sudokuGameRule": "數獨遊戲規則",
+		"sudokuGameRuleContent1": "數獨遊戲由9個3×3個的九宮格組成，共有9宮9行9列81格。",
+		"sudokuGameRuleContent2": "每一宮、每一行、每一列的數字均須包含 1～9，不能缺少，也不能重複。",
+		"sudokuGameRuleContent3": "所有格子都被填滿上符合規則的數字後，則視為遊戲通關。",
+		"aboutKillerSudoku": "關於殺手數獨",
+		"aboutKillerSudokuContent1": "殺手數獨（Killer Sudoku / キラーナンプレ）是從數獨衍生出的變種。它結合了數獨（Sudoku）和數和（Kakuro）的玩法。",
+		"killerSudokuRule": "殺手數獨遊戲規則",
+		"killerSudokuRuleContent1": "殺手數獨在普通數獨規則基礎上增加了“區”，以虛線劃分，虛線框左上角的角標即是該區的和，區的總和必須和它所包含數字之和 相同。",
+		"killerSudokuRuleContent2": "區所包含的數字不會出現重複的情況。",
+		"killerSudokuRuleContent3": "常見的和與其包含的數字如下：",
+		"killerSudokuRuleContent4": "${number}個數字的區",
+		"killerSudokuRuleContent5": "更大的數不常出現且用途不大。",
+		"welcomeToPlay": "希望你玩的開心！",
+		"fromWiki": "部分介紹源自Wikipedia"
 	},
 	"prompt": {
 		"copy": "複製",
@@ -43,6 +67,11 @@
 		"delete": "刪除",
 		"cancel": "取消",
 		"confirm": "確認",
-		"copySuccessfully": "複製成功！"
+		"copySuccessfully": "複製成功！",
+
+		"savedGame": "已儲存的遊戲",
+		"savedGameContent": "你還想繼續之前的數獨遊戲嗎?",
+		"yes": "是的",
+		"no": "算了"
 	}
 }

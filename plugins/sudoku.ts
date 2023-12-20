@@ -10,7 +10,6 @@ export interface DlxRowValItem {
 
 export type SudokuDifficulty = 'Easy' | 'Moderate' | 'Hard' | 'Extreme'
 
-var dlx1 = require('dlx')
 export const random = (min: number, max: number): number => {
 	var newMin = min || 0
 	var newMax = max || 10
@@ -319,7 +318,7 @@ export const sudoku = {
 	general,
 	solve,
 	generateProblem,
-	killerSudoku: killerSudoku,
+	// killerSudoku: killerSudoku,
 	getPalace,
 }
 

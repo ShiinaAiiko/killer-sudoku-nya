@@ -1,7 +1,7 @@
 {
 	"common": {
-		"appTitle": "ナンプレニャー",
-		"logoTitle": "ナンプレ"
+		"appTitle": "NyaNya ゲーム",
+		"logoTitle": "ゲーム"
 	},
 	"languages": {
 		"en-US": "英語",
@@ -33,7 +33,32 @@
 		"keyboardInput": "キーボード入力",
 		"touchInput": "タッチ入力",
 		"generating": "生成中",
-		"generatedSuccessfully": "生成済み!"
+		"generatedSuccessfully": "生成済み!",
+
+		"playNewGame": "ゲームをスタート",
+
+		"normalShare": "通常の共有",
+		"shareProblem": "質問とともに共有する",
+		"shareProblemContent": "友達を招待して、このナンプレ問題を一緒にプレイしてみませんか? (リンクを開いて友達もこのナンプレ問題をプレイできます)",
+
+		"aboutSudoku": "ナンプレについて",
+		"aboutSudokuContent1": "ナンプレは数理論理学ゲームです。ゲームは 9 × 9 のグリッドで構成されています。プレーヤーは、グリッドによって提供される数字に基づいて、他のグリッドの数字を推測する必要があります。",
+		"aboutSudokuContent2": "この種のゲームは論理的思考力のみを必要とし、数値演算とは関係ないため、数学が苦手な人にも適しています。ゲームプレイはシンプルですが、提供される数値は刻々と変化します。 非常に多くの教育者が、ナンプレは頭を使う良い練習方法であると信じています。",
+		"sudokuGameRule": "ナンプレゲームのルール",
+		"sudokuGameRuleContent1": "ナンプレゲームは 9 つの 3×3 グリッドで構成され、合計 9 つの宮殿、9 行、9 列、81 グリッドで構成されます。",
+		"sudokuGameRuleContent2": "各宮殿、各行、各列の数字には 1 ～ 9 が含まれている必要があります。欠落したり重複したりすることはできません。",
+		"sudokuGameRuleContent3": "すべてのグリッドがルールに準拠した数字で満たされた場合、ゲームは合格したとみなされます。",
+		"aboutKillerSudoku": "キラーナンプレについて",
+		"aboutKillerSudokuContent1": "キラーナンプレはすうどくから派生したバリエーションです。 ナンプレとカクロのゲームプレイを組み合わせたものです。",
+		"killerSudokuRule": "キラーナンプレゲームのルール",
+		"killerSudokuRuleContent1": "キラーナンプレは、点線で区切られた通常のナンプレルールに「領域」を追加します。点線ボックスの左上隅の下付き文字は領域の合計です。領域の合計は次のようになります。そこに含まれる数値の合計。同じ。",
+		"killerSudokuRuleContent2": "エリアに含まれる数字は繰り返されません。",
+		"killerSudokuRuleContent3": "一般的な合計とそれに含まれる数値は次のとおりです:",
+		"killerSudokuRuleContent4": "${number}つのセル",
+		"killerSudokuRuleContent5": "大きな数値は使用頻度が低く、有用性が低くなります。",
+		"welcomeToPlay": "楽しんでいただければ幸いです!",
+
+		"fromWiki": "Wikipediaより"
 	},
 	"prompt": {
 		"copy": "コピー",
@@ -43,6 +68,11 @@
 		"delete": "削除",
 		"cancel": "取り消す",
 		"confirm": "確認",
-		"copySuccessfully": "コピー済みです"
+		"copySuccessfully": "コピー済みです",
+
+		"savedGame": "保存されたゲーム",
+		"savedGameContent": "你還想繼續之前的數獨遊戲嗎?",
+		"yes": "はい",
+		"no": "結構だ"
 	}
 }
