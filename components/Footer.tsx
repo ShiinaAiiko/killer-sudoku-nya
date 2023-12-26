@@ -15,6 +15,13 @@ import { useTranslation } from 'react-i18next'
 import { bindEvent } from '@saki-ui/core'
 import { Query } from '../plugins/methods'
 import { appearanceColors } from '../store/config'
+import {
+	SakiButton,
+	SakiDropdown,
+	SakiIcon,
+	SakiMenu,
+	SakiMenuItem,
+} from './saki-ui-react'
 
 const FooterComponent = (): JSX.Element => {
 	const { t, i18n } = useTranslation()
@@ -34,23 +41,19 @@ const FooterComponent = (): JSX.Element => {
 			<div className='f-left'>
 				<div className='f-language'>
 					{mounted ? (
-						<saki-dropdown
+						<SakiDropdown
 							visible={showLanguageDropdown}
 							floating-direction='Center'
-							ref={bindEvent({
-								close: () => {
-									setShowLanguageDropdown(false)
-								},
-							})}
+							onClose={() => {
+								setShowLanguageDropdown(false)
+							}}
 						>
-							<saki-button
-								ref={bindEvent({
-									tap: () => {
-										console.log('more')
-										setShowLanguageDropdown(true)
-									},
-								})}
-								bg-color='transparent'
+							<SakiButton
+								onTap={() => {
+									console.log('more')
+									setShowLanguageDropdown(true)
+								}}
+								bgColor='transparent'
 								padding='10px 6px 10px 12px'
 								title='Language'
 								border='none'
@@ -62,28 +65,26 @@ const FooterComponent = (): JSX.Element => {
 											ns: 'languages',
 										})}
 									</span>
-									<saki-icon type='BottomTriangle'></saki-icon>
+									<SakiIcon type='BottomTriangle'></SakiIcon>
 								</div>
-							</saki-button>
+							</SakiButton>
 							<div slot='main'>
-								<saki-menu
-									ref={bindEvent({
-										selectvalue: async (e) => {
-											router.replace(
-												Query('/killerSudoku', {
-													...router.query,
-													lang: e.detail.value,
-												})
-											)
-											// dispatch(methods.config.setLanguage(e.detail.value))
+								<SakiMenu
+									onSelectvalue={(e) => {
+										router.replace(
+											Query('/killerSudoku', {
+												...router.query,
+												lang: e.detail.value,
+											})
+										)
+										// dispatch(methods.config.setLanguage(e.detail.value))
 
-											setShowLanguageDropdown(false)
-										},
-									})}
+										setShowLanguageDropdown(false)
+									}}
 								>
 									{config.languages.map((v) => {
 										return (
-											<saki-menu-item
+											<SakiMenuItem
 												key={v}
 												padding='10px 18px'
 												font-size='14px'
@@ -110,12 +111,12 @@ const FooterComponent = (): JSX.Element => {
 															  })}
 													</span>
 												</div>
-											</saki-menu-item>
+											</SakiMenuItem>
 										)
 									})}
-								</saki-menu>
+								</SakiMenu>
 							</div>
-						</saki-dropdown>
+						</SakiDropdown>
 					) : (
 						''
 					)}
@@ -216,7 +217,7 @@ const FooterComponent = (): JSX.Element => {
 						Github
 					</a>
 					<span> - </span>
-					<a target='_blank' href='https://im.aiiko.club/invite/78L2tkleM?t=0'>
+					<a target='_blank' href='https://aiiko.club/1'>
 						{'Shiina Aiiko'}
 					</a>
 				</div>

@@ -33,7 +33,7 @@ const HeaderComponent = ({
 
 	const router = useRouter()
 	const { redirectUri, deviceId, appId, disableHeader } = router.query
-	const layout = useSelector((state: RootState) => state.layout)
+	const game = useSelector((state: RootState) => state.game)
 	const config = useSelector((state: RootState) => state.config)
 
 	return (
@@ -54,6 +54,29 @@ const HeaderComponent = ({
 			</div>
 			<div className='tb-h-center'></div>
 			<div className='tb-h-right'>
+				{game.generateKillerSudokuStatus === 0 ? (
+					<div className='tb-h-r-generating'>
+						<saki-animation-loading
+							type='rotateEaseInOut'
+							width='20px'
+							height='20px'
+							border='3px'
+							border-color='var(--saki-default-color)'
+						/>
+						<span
+							style={{
+								color: '#555',
+								fontSize: '12px',
+							}}
+						>
+							{t('generatingBackground', {
+								ns: 'prompt',
+							})}
+						</span>
+					</div>
+				) : (
+					''
+				)}
 				{mounted && (
 					<meow-apps-dropdown
 						bg-color='rgba(0,0,0,0)'

@@ -46,3 +46,4 @@ build.tgz
 /public/webworker-bundle.js
 
 /webworker/dist
+/components/saki-ui-react

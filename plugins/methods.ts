@@ -81,3 +81,9 @@ export const Query = (
 	)
 	return url + (s ? '?' + s : '')
 }
+export const GetTime = (timestamp: number) => {
+	const h = Math.floor(timestamp / 3600) % 24
+	const m = Math.floor(timestamp / 60) % 60
+	const s = Math.floor(timestamp % 60)
+	return h + 'h ' + m + 'm ' + s + 's'
+}

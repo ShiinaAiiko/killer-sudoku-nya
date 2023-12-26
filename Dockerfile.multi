@@ -9,11 +9,12 @@ COPY .yarnrc .npmrc /root/
 COPY package.json yarn.lock ./
 
 RUN \
-  yarn install --frozen-lockfile --registry https://registry.npm.aiiko.club
+  yarn --registry https://registry.npm.aiiko.club
 
 COPY . .
 
 RUN \
+  ./release.sh buildTime && \
   yarn build-webworker && \
   yarn export
 

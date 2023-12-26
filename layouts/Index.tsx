@@ -21,7 +21,15 @@ import HeaderComponent from '../components/Header'
 import { bindEvent } from '@saki-ui/core'
 import { language } from '../store/config'
 import { storage } from '../store/storage'
-import { languages } from '../plugins/i18n/i18n'
+import { languages, resources } from '../plugins/i18n/i18n'
+import {
+	SakiBaseStyle,
+	SakiColor,
+	SakiFooter,
+	SakiInit,
+	SakiInitLanguage,
+} from '../components/saki-ui-react'
+// import { SakiFooter } from '../saki-ui'
 // import parserFunc from 'ua-parser-js'
 
 const ToolboxLayout = ({ children }: propsType): JSX.Element => {
@@ -43,6 +51,24 @@ const ToolboxLayout = ({ children }: propsType): JSX.Element => {
 			dispatch(methods.config.getDeviceType())
 		})
 	}, [])
+
+	useEffect(() => {
+		updateAppearance()
+	}, [config.appearance])
+
+	const updateAppearance = () => {
+		switch (config.appearance) {
+			case 'Pink':
+				break
+
+			case 'Blue':
+				break
+
+			default:
+				break
+		}
+	}
+
 	const initNyaNyaWasm = async () => {
 		NyaNyaWasm.setWasmPath('./nyanyajs-utils-wasm.wasm')
 		NyaNyaWasm.setCoreJsPath('./wasm_exec.js')
@@ -50,15 +76,15 @@ const ToolboxLayout = ({ children }: propsType): JSX.Element => {
 
 	useEffect(() => {
 		const init = async () => {
-      if (!router.isReady) {
-        // console.log('lang设置1')
-        
+			if (!router.isReady) {
+				// console.log('lang设置1')
+
 				// dispatch(
 				// 	methods.config.setLanguage(
 				// 		(await storage.global.get('language')) || 'system'
 				// 	)
-        // )
-        // console.log('lang设置')
+				// )
+				// console.log('lang设置')
 				return
 			}
 
@@ -88,29 +114,74 @@ const ToolboxLayout = ({ children }: propsType): JSX.Element => {
 					content='width=device-width, initial-scale=1.0'
 				></meta>
 			</Head>
-			<div className='tool-box-layout'>
+			<div className={'tool-box-layout ' + config.appearance}>
 				<>
 					{mounted ? (
 						<>
-							<saki-dialog-progress-bar></saki-dialog-progress-bar>
-							<saki-init
-								ref={bindEvent({
-									mounted() {
-										dispatch(configSlice.actions.setSakiUILoadStatus(true))
-										// setProgressBar(progressBar + 0.2 >= 1 ? 1 : progressBar + 0.2)
-										// setProgressBar(.6)
-									},
-								})}
-							></saki-init>
+							<SakiInit
+								onMounted={() => {
+									dispatch(configSlice.actions.setSakiUILoadStatus(true))
+
+									// setProgressBar(progressBar + 0.2 >= 1 ? 1 : progressBar + 0.2)
+									// setProgressBar(.6)
+									;(window as any)?.sakiui?.initAppearances?.([
+										{
+											value: 'Pink',
+											color: '#f29cb2',
+										},
+										{
+											value: 'Blue',
+											color: '#3393ce',
+										},
+									])
+								}}
+							></SakiInit>
+							<SakiInitLanguage
+								language={config.language}
+								lang={config.lang}
+								defalutLanguage={'en-US'}
+								ref={(e) => {
+									e?.initLanguage?.(config.languages, resources as any)
+								}}
+							></SakiInitLanguage>
+							<SakiColor
+								// appearance={config.appearance}
+								defaultColor={
+									config.appearance === 'Blue' ? '#3493cd' : '#f29cb2'
+								}
+								defaultHoverColor={
+									config.appearance === 'Blue' ? '#abd6f3' : '#f185a0'
+								}
+								defaultActiveColor={
+									config.appearance === 'Blue' ? '#89c7f0' : '#ce5d79'
+								}
+								defaultBorderColor={
+									config.appearance === 'Blue' ? '#f1f1f1' : '#f1f1f1'
+								}
+							></SakiColor>
 						</>
 					) : (
 						''
 					)}
-					{mounted ? <saki-base-style></saki-base-style> : ''}
+					{mounted ? <SakiBaseStyle></SakiBaseStyle> : ''}
 
 					<HeaderComponent visible={true} fixed={false}></HeaderComponent>
 					<div className={'tb-main scrollBarHover'}>
 						<div className='tb-main-wrap'>{children}</div>
+						{/* 1111111 1111
+						{mounted ? (
+							<SakiFooter
+								onChangeLanguage={(e) => {
+									console.log(e)
+								}}
+								github
+								githubText='1'
+								appLink='1'
+							></SakiFooter>
+						) : (
+							''
+						)}
+						11111111111 */}
 					</div>
 				</>
 			</div>

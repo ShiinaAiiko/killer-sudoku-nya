@@ -6,7 +6,7 @@ branch="main"
 configFilePath="config.pro.json"
 registryUrl="https://registry.npmmirror.com/"
 DIR=$(cd $(dirname $0) && pwd)
-allowMethods=("unzip zip protos stop rm npmconfig install gitpull dockerremove start logs")
+allowMethods=("buildTime unzip zip protos stop rm npmconfig install gitpull dockerremove start logs")
 
 npmconfig() {
   echo "-> 配置npm config"
@@ -35,6 +35,11 @@ dockerremove() {
   echo "-> 删除无用镜像"
   docker rm $(docker ps -q -f status=exited)
   docker rmi -f $(docker images | grep '<none>' | awk '{print $3}')
+}
+
+buildTime() {
+  buildTime=$(date +'%Y-%m-%d_%T')
+  sed -i "s/\"buildTime\":.*$/\"buildTime\":\"$buildTime\",/" ./package.json
 }
 
 start() {

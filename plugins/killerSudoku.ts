@@ -22,7 +22,8 @@ export interface KillerSudokuProblemItem {
 export const solve = (
 	sudokuProblem: KillerSudokuProblemItem[],
 	options?: {
-		maxSolutionCount: number
+		maxSolutionCount?: number
+		log?: boolean
 	}
 ) => {
 	// console.log('sudokuProblem', sudokuProblem)
@@ -36,109 +37,6 @@ export const solve = (
 
 		// let sumArrs = []
 		let sumArrsTemp: number[][] = getAllAnswersForSum(v.list.length, v.val)
-
-		// console.log(sumArrsTemp)
-		// for (let i = 1; i <= 9; i++) {
-		// 	if (v.list.length === 1 && i === v.val) {
-		// 		// console.log(v, i)
-		// 		// numbers.push(i)
-		// 		// sumArrs.push([i])
-		// 		sumArrsTemp.push([i])
-		// 	}
-		// 	if (v.list.length >= 2) {
-		// 		for (let j = 1; j <= 9; j++) {
-		// 			// 2个数字
-		// 			if (i + j === v.val && v.list.length === 2 && i < j) {
-		// 				sumArrsTemp.push([i, j])
-		// 			}
-		// 			// if (i + j === v.val && v.list.length === 2 && i != j) {
-		// 			// 	// console.log(v, i, j, i + j)
-		// 			// 	!numbers.includes(i) && numbers.push(i)
-		// 			// 	sumArrs.push([i, j])
-		// 			// }
-		// 			// 3个数字
-		// 			if (v.list.length >= 3) {
-		// 				for (let a = 1; a <= 9; a++) {
-		// 					if (
-		// 						i + j + a === v.val &&
-		// 						v.list.length === 3 &&
-		// 						i < j &&
-		// 						j < a
-		// 					) {
-		// 						sumArrsTemp.push([i, j, a])
-		// 					}
-		// 					// if (
-		// 					// 	i + j + a === v.val &&
-		// 					// 	v.list.length === 3 &&
-		// 					// 	killerSudoku.isEqual(v, [i, j, a, 0, 0])
-		// 					// ) {
-		// 					// 	// console.log(
-		// 					// 	// 	'isEqual',
-		// 					// 	// 	killerSudoku.isEqual(v, i, j, a, 0, 0),
-		// 					// 	// 	i,
-		// 					// 	// 	j,
-		// 					// 	// 	a
-		// 					// 	// )
-		// 					// 	// console.log(i, j, a, i + j + a)
-		// 					// 	!numbers.includes(i) && numbers.push(i)
-		// 					// 	sumArrs.push([i, j, a])
-		// 					// }
-
-		// 					// 4个数字
-		// 					if (v.list.length >= 4) {
-		// 						for (let b = 1; b <= 9; b++) {
-		// 							if (
-		// 								i + j + a + b === v.val &&
-		// 								v.list.length === 4 &&
-		// 								i < j &&
-		// 								j < a &&
-		// 								a < b
-		// 							) {
-		// 								sumArrsTemp.push([i, j, a, b])
-		// 							}
-		// 							// if (
-		// 							// 	i + j + a + b === v.val &&
-		// 							// 	v.list.length === 4 &&
-		// 							// 	killerSudoku.isEqual(v, [i, j, a, b, 0])
-		// 							// ) {
-		// 							// 	!numbers.includes(i) && numbers.push(i)
-		// 							// 	sumArrs.push([i, j, a, b])
-		// 							// 	// console.log(i, j, a, b, i + j + a + b)
-		// 							// }
-		// 							// 5个数字
-		// 							if (v.list.length >= 5) {
-		// 								for (let c = 1; c <= 9; c++) {
-		// 									if (
-		// 										i + j + a + b + c === v.val &&
-		// 										v.list.length === 5 &&
-		// 										i < j &&
-		// 										j < a &&
-		// 										a < b &&
-		// 										b < c
-		// 									) {
-		// 										sumArrsTemp.push([i, j, a, b, c])
-		// 									}
-		// 									// if (
-		// 									// 	i + j + a + b + c === v.val &&
-		// 									// 	v.list.length === 5 &&
-		// 									// 	killerSudoku.isEqual(v, [i, j, a, b, c])
-		// 									// ) {
-		// 									// 	!numbers.includes(i) && numbers.push(i)
-
-		// 									// 	sumArrs.push([i, j, a, b, c])
-		// 									// }
-		// 								}
-		// 							}
-		// 						}
-		// 					}
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		// }
-
-		// rowArr
-		// rowArr.push()
 
 		let sumArrsTempArr: {
 			[sum: number]: number[]
@@ -316,6 +214,7 @@ export const solve = (
 	const dlxSolve = dlx.solve(sudokuLinkList, {
 		maxSolutionCount: options?.maxSolutionCount,
 		depthLimit: 81,
+		log: options?.log || false,
 	})
 
 	// dlx.solve(sudokuLinkList, {
@@ -347,7 +246,12 @@ export const solve = (
 }
 export const generateProblem = (
 	sudoku: number[],
-	difficulty: SudokuDifficulty
+	difficulty: SudokuDifficulty,
+	options?: {
+		log?: boolean
+		// If this parameter is set, the difficulty parameter will be invalid
+		showCellCount?: number
+	}
 ): {
 	problem: KillerSudokuProblemItem[]
 	difficulty: SudokuDifficulty
@@ -384,6 +288,7 @@ export const generateProblem = (
 			level: 1,
 			count: 0,
 			userdIndex: {},
+			log: options?.log || false,
 		}
 	)
 
@@ -430,7 +335,7 @@ export const generateProblem = (
 	let singleCellNum = random(0, 3)
 	// singleCellNum = singleCellNum - 3 < 0 ? 0 : singleCellNum - 3
 
-	console.log('singleCell', singleCell.length, singleCellNum)
+	options?.log && console.log('singleCell', singleCell.length, singleCellNum)
 	if (singleCell.length > singleCellNum) {
 		problem = mergeSingleCell(
 			[
@@ -449,6 +354,7 @@ export const generateProblem = (
 			{
 				count: 1,
 				singleCellNum,
+				log: options?.log || false,
 			}
 		).map((v) => {
 			return {
@@ -463,8 +369,8 @@ export const generateProblem = (
 		})
 		singleCell = problem.filter((v) => v.list.length === 1)
 		if (singleCell.length >= 4) {
-			console.log('单个格子数量超过了', singleCell.length)
-			return generateProblem(sudoku, difficulty)
+			options?.log && console.log('单个格子数量超过了', singleCell.length)
+			return generateProblem(sudoku, difficulty, options)
 		}
 		// 合并挨在一起的单个的并检测
 		// return killerSudoku.generateProblem(sudoku)
@@ -479,27 +385,29 @@ export const generateProblem = (
 	// 	answser.filter((v) => v.list.length === 1)
 	// )
 
-	let showNum = 0
-	switch (difficulty) {
-		case 'Easy':
-			// 31
-			showNum = 31
-			break
-		case 'Moderate':
-			// 26
-			showNum = 26
-			break
-		case 'Hard':
-			// 10
-			showNum = 10
-			break
-		case 'Extreme':
-			showNum = 0
-			// 0
-			break
+	let showNum = options?.showCellCount || 0
+	if (!showNum) {
+		switch (difficulty) {
+			case 'Easy':
+				// 35
+				showNum = 35
+				break
+			case 'Moderate':
+				// 26
+				showNum = 25
+				break
+			case 'Hard':
+				// 10
+				showNum = 15
+				break
+			case 'Extreme':
+				showNum = 0
+				// 0
+				break
 
-		default:
-			break
+			default:
+				break
+		}
 	}
 	const usedGrid: number[] = []
 	for (let i = 0; i < showNum; i++) {
@@ -510,7 +418,6 @@ export const generateProblem = (
 		} while (usedGrid.includes(gridIndex))
 
 		// console.log(gridIndex)
-
 		problem.some((v) => {
 			let isSkip = false
 			v.list.some((sv) => {
@@ -518,7 +425,7 @@ export const generateProblem = (
 				const col = (gridIndex % 9) + 1
 				if (sv.row === row && sv.col === col) {
 					sv.val = sudoku[gridIndex]
-					// console.log(sv)
+					usedGrid.push(gridIndex)
 					isSkip = true
 					return isSkip
 				}
@@ -526,6 +433,8 @@ export const generateProblem = (
 			return isSkip
 		})
 	}
+
+	options?.log && console.log('usedGrid', usedGrid)
 	//  暂时注解
 
 	let sol = solve(
@@ -545,10 +454,10 @@ export const generateProblem = (
 	)
 
 	if (sol.length !== 1) {
-		console.log('非唯一解，重新来', sol.length)
+		options?.log && console.log('非唯一解，重新来', sol.length)
 		return generateProblem(sudoku, difficulty)
 	} else {
-		console.log('唯一解', sol.length)
+		options?.log && console.log('唯一解', sol.length)
 	}
 	return {
 		problem,
@@ -562,6 +471,7 @@ const mergeSingleCell = (
 	config: {
 		count: number
 		singleCellNum: number
+		log?: boolean
 	}
 ): {
 	type: 'Sum'
@@ -644,7 +554,10 @@ const mergeSingleCell = (
 							}
 						}),
 					}
-				})
+				}),
+				{
+					log: config?.log || false,
+				}
 			)
 			isSkip = answer.length === 1
 			// console.log('mergesingleCell.answer', answer.length)
@@ -816,6 +729,7 @@ const generateKillerSudokuProblemFunc = (
 		userdIndex: {
 			[index: number]: number
 		}
+		log?: boolean
 	}
 ): KillerSudokuProblemItem[] => {
 	let problemList: KillerSudokuProblemItem[] = []
@@ -921,6 +835,7 @@ const generateKillerSudokuProblemFunc = (
 			}),
 			{
 				maxSolutionCount: 2,
+				log: config?.log || false,
 			}
 		)
 		// console.timeEnd('killerSudoku')
@@ -1053,7 +968,6 @@ const generateKillerSudokuSumItem = (
 	// 	cellNumber = 0
 	// }
 
-
 	let index = (row - 1) * 9 + col - 1
 
 	// console.log('number', number, numbersRandom)
@@ -1095,7 +1009,6 @@ const generateKillerSudokuSumItem = (
 		count + 1
 	)
 }
-
 
 // const generateKillerSudokuSumItem = (
 // 	sudoku: number[],

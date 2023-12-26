@@ -6,6 +6,7 @@ import './killerSudoku.scss'
 import '../components/Footer.scss'
 import '../components/Header.scss'
 import '../components/MenuDropdown.scss'
+import '../components/Statistics.scss'
 
 import { useRouter } from 'next/router'
 import { Provider } from 'react-redux'

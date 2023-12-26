@@ -3,6 +3,7 @@ import * as React from 'react'
 declare global {
 	namespace JSX {
 		interface IntrinsicElements {
+			// 'saki-dropdown': HTMLSakiDropdownElement
 			'saki-dropdown': any
 			'saki-menu': any
 			'saki-menu-item': any
@@ -40,8 +41,12 @@ declare global {
 			'saki-chat-layout-bottom-navigator': any
 			'saki-chat-layout': any
 			'saki-chat-layout-bottom-navigator-item': any
-      'saki-icon': any
-      "saki-dialog-progress-bar": any
+			'saki-icon': any
+			'saki-dialog-progress-bar': any
+			'saki-animation-loading': any
+			'saki-color': any
+			'saki-init-language': any
+			'saki-footer': any
 		}
 	}
 	namespace Window {

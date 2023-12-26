@@ -52,6 +52,7 @@ export const solve = (
 		maxSolutionCount?: number
 		depthLimit?: number
 		algorithms?: 'Recursion' | 'DFS'
+		log?: boolean
 	}
 ) => {
 	const algorithms = options?.algorithms || 'DFS'
@@ -164,24 +165,24 @@ export const solve = (
 	// dlxFunc(linkList, solutions, [], 1, config)
 
 	switch (algorithms) {
-		case 'Recursion':
-			console.time('time.dlxRecursion')
+    case 'Recursion':
+			options?.log && console.time('time.dlxRecursion')
 			solutions = dlxRecursion(linkList, [], [], 1, {
 				count: 0,
 				// depthLimit: 10,
 				depthLimit: options?.depthLimit,
 				maxSolutionCount: options?.maxSolutionCount,
 			})
-			console.timeEnd('time.dlxRecursion')
+			options?.log && console.timeEnd('time.dlxRecursion')
 			break
 		case 'DFS':
-			console.time('time.dlxDFS')
+			options?.log && console.time('time.dlxDFS')
 			solutions = dlxDFS(linkList, {
 				// depthLimit: 10,
 				depthLimit: options?.depthLimit,
 				maxSolutionCount: options?.maxSolutionCount,
 			})
-			console.timeEnd('time.dlxDFS')
+			options?.log && console.timeEnd('time.dlxDFS')
 			break
 
 		default:

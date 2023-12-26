@@ -475,8 +475,8 @@
 			display: flex;
 			justify-content: flex-start;
 			flex-direction: column;
+			--base-pixel: calc(var(--width) * 0.002873);
 			.ki-wrap {
-				--base-pixel: calc(var(--width) * 0.002873);
 				width: calc(var(--width));
 				// height: calc(var(--width) * 1.23);
 				display: flex;
@@ -541,11 +541,37 @@
 				font-style: italic;
 				color: #ccc;
 				font-size: 12px;
+				// margin-top: 6px;
+			}
+			.ki-buttons {
+				display: flex;
+				justify-content: space-between;
+				// padding: 0 10px;
+				padding-left: 10px;
+				saki-button {
+					flex: 1;
+					height: calc(var(--base-pixel) * 66);
+					&:nth-last-child(1) {
+						margin-left: 10px;
+					}
+					span {
+						font-size: calc(var(--base-pixel) * 24);
+					}
+				}
+				@media screen and (max-width: 768px) {
+					padding-left: 0px;
+					saki-button {
+						height: 50px;
+						span {
+							font-size: 20px;
+						}
+					}
+				}
 			}
 		}
 	}
 	.ks-introduce {
-		margin: 50px 0 0;
+		margin: 40px 0 20px;
 		padding: 0 20px;
 		h1 {
 			margin: 0 auto 10px;
@@ -554,7 +580,8 @@
 			color: #333;
 		}
 		.ks-i-content {
-			margin: 0 auto 50px;
+			// margin: 0 auto 40px;
+			margin: 0 auto 20px;
 			p {
 				font-size: 15px;
 				line-height: 25px;
@@ -575,7 +602,7 @@
 		}
 	}
 	.ks-footer {
-		margin: 0 0 50px;
+		margin: 0 0 0px;
 	}
 }
 

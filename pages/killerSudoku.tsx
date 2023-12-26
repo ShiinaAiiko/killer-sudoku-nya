@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import FooterComponent from '../components/Footer'
+import { v5 as uuidv5, v4 as uuidv4 } from 'uuid'
+import StatisticsComponent, { StatisticsData } from '../components/Statistics'
 import path from 'path'
 import {
 	RootState,
@@ -13,6 +15,7 @@ import {
 	useAppDispatch,
 	methods,
 	apiSlice,
+	configSlice,
 } from '../store'
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
@@ -23,6 +26,7 @@ import {
 	QueueLoop,
 	userAgent,
 	Debounce,
+	WebWorker,
 } from '@nyanyajs/utils'
 import {
 	getRegExp,
@@ -30,14 +34,9 @@ import {
 	getRandomPassword,
 	Query,
 } from '../plugins/methods'
-import { getGeoInfo } from 'findme-js'
 import { dlx } from '../plugins/dlx'
 import sudoku, { SudokuDifficulty } from '../plugins/sudoku'
 
-import {
-	generateKillerSudoku,
-	getSeparationsFromAreas,
-} from 'killer-sudoku-generator'
 import moment from 'moment'
 import { storage } from '../store/storage'
 import {
@@ -47,6 +46,7 @@ import {
 	KillerSudokuProblemItem,
 } from '../store/game'
 import killerSudoku from '../plugins/killerSudoku'
+import { randomUUID } from 'crypto'
 
 const KillerSudokuPage = () => {
 	const { t, i18n } = useTranslation('killerSudokuPage')
@@ -57,13 +57,20 @@ const KillerSudokuPage = () => {
 
 	const router = useRouter()
 	const [loading, setLoading] = useState(false)
+
+	const [isLockScreen, setIsLockScreen] = useState(false)
+	const wakeLock = useRef<WakeLockSentinel>()
+
 	const [openMenuDropDownMenu, setOpenMenuDropDownMenu] = useState(false)
 	const [openInputModeDropDown, setOpenInputModeDropDown] = useState(false)
 	const [openMoreDropDownMenu, setOpenMoreDropDownMenu] = useState(false)
 	const [openNewGameDropDownMenu, setOpenNewGameDropDownMenu] = useState(false)
+	const [openStatisticsModal, setOpenStatisticsModal] = useState(false)
 	const [isStart, setIsStart] = useState(false)
 	const [isInitQueryProblem, setIsInitQueryProblem] = useState(false)
 	const [isSolve, setIsSolve] = useState<0 | 1 | 2>(0)
+	const [solveDirectly, setSolveDirectly] = useState(false)
+
 	const [isOpenNote, setIsOpenNote] = useState(false)
 	const [isOpenErase, setIsOpenErase] = useState(false)
 	const [isRestoreGame, setIsRestoreGame] = useState(false)
@@ -73,38 +80,8 @@ const KillerSudokuPage = () => {
 	const [difficulty, setDifficulty] = useState<SudokuDifficulty | ''>('')
 	// const cellAdjacentDirection = useRef<string[][]>([])
 	const timer = useRef<NodeJS.Timeout>()
-	const [sudokuList, setsudokuList] = useState<number[][]>([])
 
-	const [answer, setAnswer] = useState<KillerSudokuAnswerItem[]>([
-		// {
-		// 	row: 2,
-		// 	col: 1,
-		// 	val: 0,
-		// 	notes: [1, 2],
-		// },
-		// {
-		// 	row: 3,
-		// 	col: 8,
-		// 	val: 0,
-		// 	notes: [1],
-		// },
-		// {
-		// 	row: 4,
-		// 	col: 8,
-		// 	val: 3,
-		// },
-		// {
-		// 	row: 1,
-		// 	col: 1,
-		// 	val: 0,
-		// 	notes: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-		// },
-		// {
-		// 	row: 3,
-		// 	col: 3,
-		// 	val: 9,
-		// },
-	])
+	const [answer, setAnswer] = useState<KillerSudokuAnswerItem[]>([])
 
 	const [history, setHistory] = useState<KillerSudokuHistoryAnswerItem[]>([])
 	// 1 row / 2 col / 3 palace / 4 index
@@ -117,6 +94,7 @@ const KillerSudokuPage = () => {
 
 	const [killerSudokuDiff, setKillerSudokuDiff] =
 		useState<SudokuDifficulty>('Easy')
+	const [id, setId] = useState('')
 	const [problem, setProblem] = useState<KillerSudokuProblemItem[]>([])
 
 	const dispatch = useDispatch<AppDispatch>()
@@ -196,7 +174,7 @@ const KillerSudokuPage = () => {
 					})
 				// console.log(ks)
 
-				initKS(ks as any, String(router.query.d) as any, [], [], 0, 0)
+				initKS(ks as any, '', String(router.query.d) as any, [], [], 0, 0)
 
 				setIsRestoreGame(true)
 			} catch (error) {
@@ -223,6 +201,21 @@ const KillerSudokuPage = () => {
 
 	useEffect(() => {
 		setMounted(true)
+		dispatch(methods.game.initKillerSudoku())
+
+		if ('wakeLock' in navigator) {
+			requestWakeLock()
+		}
+		document.addEventListener('visibilitychange', async () => {
+			if (wakeLock !== null && document.visibilityState === 'visible') {
+				requestWakeLock()
+			}
+		})
+
+		// const init = async () => {
+		// 	console.log('games', await storage.killerSudokuData.getAll())
+		// }
+		// init()
 		// console.log('userAgent', )
 
 		// const iframe = document.createElement('iframe')
@@ -249,13 +242,26 @@ const KillerSudokuPage = () => {
 	useEffect(() => {
 		timer.current && clearTimeout(timer.current)
 		if (isStart) {
-			timer.current = setTimeout(() => {
+			timer.current = setTimeout(async () => {
 				if (isStart && !isSolve) {
 					setTime(time + 1)
 				}
 			}, 1000)
 		}
 	}, [isStart, time, isSolve])
+
+	useEffect(() => {
+		if (time) {
+			storage.killerSudokuData.set(id, {
+				problem,
+				id,
+				time,
+				status: isSolve > 1 ? 1 : 0,
+				difficulty: killerSudokuDiff,
+			})
+			saveGame()
+		}
+	}, [time, killerSudokuDiff])
 
 	useEffect(() => {
 		window.onkeyup = keyUpEvent
@@ -269,12 +275,16 @@ const KillerSudokuPage = () => {
 	}, [i18n.language])
 
 	useEffect(() => {
-		const ca = checkAnswer(answer)
-		if (ca) {
-			isSolveFunc(answer)
+		console.log('solveDirectly', answer, solveDirectly)
+		if (!solveDirectly) {
+			const ca = checkAnswer(answer)
+			console.log('ca', ca)
+			if (ca) {
+				isSolveFunc(answer)
+			}
 		}
 		saveGame()
-	}, [answer])
+	}, [answer, solveDirectly])
 
 	useEffect(() => {
 		console.log(isSolve)
@@ -283,37 +293,84 @@ const KillerSudokuPage = () => {
 		}
 		if (isSolve === 2) {
 			timer.current && clearTimeout(timer.current)
-			alert({
-				title: t('solvedSuccessfully', {
-					ns: 'killerSudokuPage',
-				}),
-				content: t('solvedSuccessfullyContent', {
-					ns: 'killerSudokuPage',
+			const init = async () => {
+				const games = (await storage.killerSudokuData.getAll()).filter(
+					(v) => v.value.difficulty === killerSudokuDiff && v.value.status === 1
+				)
+				let bestTime = 0
+				games.forEach((v) => {
+					if (!bestTime) {
+						bestTime = v.value.time
+					}
+					v.value.time < bestTime && (bestTime = v.value.time)
 				})
-					.replace(
-						'${difficulty}',
-						t(difficulty.toLowerCase(), {
-							ns: 'killerSudokuPage',
-						})
+				console.log(time, bestTime)
+				alert({
+					title:
+						time < bestTime
+							? t('newRecord', {
+									ns: 'killerSudokuPage',
+							  })
+							: t('solvedSuccessfully', {
+									ns: 'killerSudokuPage',
+							  }),
+					content: (time < bestTime
+						? t('newRecordContent', {
+								ns: 'killerSudokuPage',
+						  })
+						: t('solvedSuccessfullyContent', {
+								ns: 'killerSudokuPage',
+						  })
 					)
-					.replace('${m}', String(Math.floor(time / 60)))
-					.replace('${s}', String(time % 60)),
-				cancelText: t('viewAnswers', {
-					ns: 'killerSudokuPage',
-				}),
-				confirmText: t('newgame', {
-					ns: 'killerSudokuPage',
-				}),
-				onCancel() {
-					initKS([], killerSudokuDiff, answer, history, time)
-				},
-				onConfirm() {
-					// generate()
-					generateKillerSudoku(difficulty, true)
-				},
-			}).open()
+						.replace(
+							'${difficulty}',
+							t(difficulty.toLowerCase(), {
+								ns: 'killerSudokuPage',
+							})
+						)
+						.replace('${m}', String(Math.floor(time / 60)))
+						.replace('${s}', String(time % 60)),
+					cancelText: t('viewAnswers', {
+						ns: 'killerSudokuPage',
+					}),
+					confirmText: t('newgame', {
+						ns: 'killerSudokuPage',
+					}),
+					onCancel() {
+						initKS([], id, killerSudokuDiff, answer, history, time)
+					},
+					onConfirm() {
+						// generate()
+						generateKillerSudoku(difficulty, true)
+					},
+				}).open()
+
+				await storage.killerSudokuData.set(id, {
+					...(await storage.killerSudokuData.get(id)),
+					status: 1,
+				})
+			}
+			init()
 		}
 	}, [isSolve])
+
+	const requestWakeLock = async () => {
+		try {
+			// console.log('wakeLock', wakeLock)
+			if (wakeLock.current) return
+			wakeLock.current = await navigator.wakeLock.request('screen')
+			console.log('Wake Lock is active!')
+			setIsLockScreen(true)
+
+			wakeLock.current.addEventListener('release', () => {
+				console.log('Wake Lock has been released')
+				setIsLockScreen(false)
+			})
+		} catch (err) {
+			console.error(err)
+			// console.log(`${err.name}, ${err.message}`)
+		}
+	}
 
 	const generateKillerSudoku = (
 		difficulty: SudokuDifficulty | '',
@@ -327,163 +384,72 @@ const KillerSudokuPage = () => {
 			})
 			pb.open()
 			pb.setProgress({
-				progress: 0.1,
+				progress: 0,
+				delay: 0,
 				tipText: t('generating', {
 					ns: 'killerSudokuPage',
 				}),
-				onAnimationEnd() {
+				async onAnimationEnd() {
 					console.time('killerSudoku.generateProblem')
-					const myWorker = new Worker('/webworker-bundle.js') // 创建worker
 
-					myWorker.addEventListener('message', (e: any) => {
-						// 接收消息
-						console.log('problem', e.data) // Greeting from Worker.js，worker线程发送的消息
+					const problem = await dispatch(
+						methods.game.getKillerSudoku(difficulty)
+					).unwrap()
 
-						const generateProblem = e.data
+					console.log('problem', problem)
 
-						initKS(
-							generateProblem.problem,
-							generateProblem.difficulty,
-							[],
-							// generateProblem.solution
-							// 	.map((v, i) => {
-							// 		const row = Math.floor(i / 9) + 1
-							// 		const col = (i % 9) + 1
-							// 		return {
-							// 			row: row,
-							// 			col: col,
-							// 			val: v,
-							// 			notes: [],
-							// 		}
-							// 	})
-							// 	.filter((_, i) => {
-							// 		return i !== 80
-							// 	}),
-							[],
-							0,
-							0
-						)
+					const ansList: typeof answer = []
 
-						timer && clearInterval(timer)
-						pb.setProgress({
-							progress: 1,
-							tipText: t('generatedSuccessfully', {
-								ns: 'killerSudokuPage',
-							}),
-							onAnimationEnd() {
-								pb.close()
-								pb = undefined as any
-							},
+					problem.problem.forEach((v) => {
+						v.list.forEach((sv) => {
+							if (sv.val) {
+								ansList.push({
+									col: sv.col,
+									row: sv.row,
+									val: sv.val,
+									default: true,
+								})
+							}
 						})
-						console.timeEnd('killerSudoku.generateProblem')
 					})
-
-					// 这种写法也可以
-					// myWorker.onmessage = e => { // 接收消息
-					//    console.log(e.data);
-					// };
-
-					myWorker.postMessage({
-						sudoku: [],
-						difficulty: difficulty,
+					initKS(
+						problem.problem,
+						'',
+						problem.difficulty,
+						ansList,
+						// problem.solution
+						// 	.map((v, i) => {
+						// 		const row = Math.floor(i / 9) + 1
+						// 		const col = (i % 9) + 1
+						// 		return {
+						// 			row: row,
+						// 			col: col,
+						// 			val: v,
+						// 			notes: [],
+						// 		}
+						// 	})
+						// 	.filter((_, i) => {
+						// 		return i !== 80
+						// 	}),
+						[],
+						0,
+						0
+					)
+					// console.log('problem', problem)
+					timer && clearInterval(timer)
+					pb.setProgress({
+						progress: 1,
+						delay: 500,
+						tipText: t('generatedSuccessfully', {
+							ns: 'killerSudokuPage',
+						}),
+						onAnimationEnd() {
+							console.log('end')
+							pb.close()
+							pb = undefined as any
+						},
 					})
-					// setTimeout(() => {
-					// 	// if (window.Worker) {
-					// 	//   console.log(window.Worker)
-					// 	//   const myWorker = new Worker('/sudokuWorker.js') // 创建worker
-
-					// 	//   myWorker.addEventListener('message', (e) => {
-					// 	//     // 接收消息
-					// 	//     console.log('message=> ', e.data) // Greeting from Worker.js，worker线程发送的消息
-					// 	//   })
-
-					// 	//   myWorker.postMessage('Greeting from Main.js')
-					// 	// }
-					// 	console.time('killerSudoku.generateProblem')
-					// 	let getSudoku = [
-					// 		3, 7, 5, 4, 6, 1, 2, 8, 9, 1, 9, 4, 8, 2, 7, 6, 5, 3, 2, 8, 6, 3,
-					// 		5, 9, 4, 1, 7, 4, 2, 3, 5, 7, 8, 1, 9, 6, 7, 5, 1, 9, 4, 6, 3, 2,
-					// 		8, 8, 6, 9, 2, 1, 3, 7, 4, 5, 9, 1, 7, 6, 8, 2, 5, 3, 4, 6, 4, 8,
-					// 		1, 3, 5, 9, 7, 2, 5, 3, 2, 7, 9, 4, 8, 6, 1,
-					// 	]
-					// 	getSudoku = []
-					// 	const generateProblem = sudoku.killerSudoku.generateProblem(
-					// 		getSudoku,
-					// 		difficulty
-					// 	)
-					// 	console.log('generateProblem', generateProblem)
-
-					// 	// const generateProblem: ReturnType<
-					// 	// 	typeof sudoku.killerSudoku.generateProblem
-					// 	// > = JSON.parse(
-					// 	// 	'{"problem":[{"type":"Sum","val":14,"list":[{"row":1,"col":1,"val":0},{"row":2,"col":1,"val":1},{"row":3,"col":1,"val":0}]},{"type":"Sum","val":10,"list":[{"row":1,"col":2,"val":2},{"row":1,"col":3,"val":0}]},{"type":"Sum","val":12,"list":[{"row":1,"col":4,"val":0},{"row":1,"col":5,"val":0},{"row":2,"col":5,"val":8}]},{"type":"Sum","val":14,"list":[{"row":1,"col":6,"val":0},{"row":1,"col":7,"val":5}]},{"type":"Sum","val":7,"list":[{"row":1,"col":8,"val":0},{"row":2,"col":8,"val":0}]},{"type":"Sum","val":15,"list":[{"row":1,"col":9,"val":0},{"row":2,"col":9,"val":7},{"row":3,"col":9,"val":0}]},{"type":"Sum","val":8,"list":[{"row":2,"col":3,"val":5},{"row":3,"col":3,"val":0}]},{"type":"Sum","val":2,"list":[{"row":2,"col":4,"val":2}]},{"type":"Sum","val":17,"list":[{"row":2,"col":6,"val":6},{"row":3,"col":6,"val":0},{"row":4,"col":6,"val":7}]},{"type":"Sum","val":8,"list":[{"row":3,"col":8,"val":0}]},{"type":"Sum","val":14,"list":[{"row":4,"col":3,"val":0},{"row":4,"col":4,"val":0},{"row":5,"col":4,"val":4}]},{"type":"Sum","val":15,"list":[{"row":4,"col":8,"val":1},{"row":4,"col":9,"val":0},{"row":5,"col":9,"val":0}]},{"type":"Sum","val":8,"list":[{"row":5,"col":2,"val":0},{"row":5,"col":3,"val":1}]},{"type":"Sum","val":15,"list":[{"row":5,"col":7,"val":0},{"row":5,"col":8,"val":0},{"row":6,"col":8,"val":0}]},{"type":"Sum","val":17,"list":[{"row":6,"col":2,"val":0},{"row":7,"col":2,"val":6},{"row":8,"col":2,"val":8}]},{"type":"Sum","val":19,"list":[{"row":6,"col":3,"val":0},{"row":7,"col":3,"val":0},{"row":8,"col":3,"val":4}]},{"type":"Sum","val":6,"list":[{"row":6,"col":4,"val":0},{"row":7,"col":4,"val":0}]},{"type":"Sum","val":13,"list":[{"row":6,"col":9,"val":8},{"row":7,"col":9,"val":4},{"row":8,"col":9,"val":0}]},{"type":"Sum","val":8,"list":[{"row":7,"col":1,"val":0},{"row":8,"col":1,"val":0}]},{"type":"Sum","val":3,"list":[{"row":9,"col":1,"val":2},{"row":9,"col":2,"val":0}]},{"type":"Sum","val":17,"list":[{"row":9,"col":3,"val":0},{"row":9,"col":4,"val":0},{"row":9,"col":5,"val":0}]},{"type":"Sum","val":13,"list":[{"row":9,"col":6,"val":5},{"row":9,"col":7,"val":8}]},{"type":"Sum","val":21,"list":[{"row":7,"col":5,"val":3},{"row":8,"col":5,"val":0},{"row":8,"col":6,"val":0},{"row":8,"col":4,"val":0}]},{"type":"Sum","val":19,"list":[{"row":7,"col":8,"val":0},{"row":8,"col":8,"val":5},{"row":9,"col":8,"val":0},{"row":9,"col":9,"val":0}]},{"type":"Sum","val":15,"list":[{"row":5,"col":5,"val":9},{"row":6,"col":5,"val":0},{"row":6,"col":6,"val":1},{"row":5,"col":6,"val":0}]},{"type":"Sum","val":18,"list":[{"row":3,"col":4,"val":0},{"row":3,"col":5,"val":0},{"row":4,"col":5,"val":6}]},{"type":"Sum","val":17,"list":[{"row":5,"col":1,"val":0},{"row":6,"col":1,"val":0}]},{"type":"Sum","val":4,"list":[{"row":3,"col":7,"val":0},{"row":4,"col":7,"val":3}]},{"type":"Sum","val":9,"list":[{"row":2,"col":7,"val":0}]},{"type":"Sum","val":25,"list":[{"row":6,"col":7,"val":4},{"row":7,"col":7,"val":0},{"row":8,"col":7,"val":0},{"row":7,"col":6,"val":0}]},{"type":"Sum","val":18,"list":[{"row":2,"col":2,"val":0},{"row":3,"col":2,"val":0},{"row":4,"col":2,"val":0}]},{"type":"Sum","val":4,"list":[{"row":4,"col":1,"val":0}]}],"difficulty":"Easy","solution":[7,2,8,3,1,9,5,4,6,1,4,5,2,8,6,9,3,7,6,9,3,7,5,4,1,8,2,4,5,2,8,6,7,3,1,9,8,7,1,4,9,3,2,6,5,9,3,6,5,2,1,4,7,8,5,6,9,1,3,8,7,2,4,3,8,4,9,7,2,6,5,1,2,1,7,6,4,5,8,9,3]}'
-					// 	// )
-
-					// 	// const ans: typeof answer = []
-					// 	// let sol = sudoku.killerSudoku.solve(
-					// 	// 	generateProblem.problem.map((v) => {
-					// 	// 		return {
-					// 	// 			type: 'Sum',
-					// 	// 			val: v.val,
-					// 	// 			list: v.list.map((v) => {
-					// 	// 				ans.push({
-					// 	// 					row: v.row,
-					// 	// 					col: v.col,
-					// 	// 					val: generateProblem.solution[
-					// 	// 						(v.row - 1) * 9 + v.col - 1
-					// 	// 					],
-					// 	// 				})
-					// 	// 				return {
-					// 	// 					row: v.row,
-					// 	// 					col: v.col,
-					// 	// 					val: 0,
-					// 	// 				}
-					// 	// 			}),
-					// 	// 		}
-					// 	// 	}),
-					// 	// 	{
-					// 	// 		maxSolutionCount: 2,
-					// 	// 	}
-					// 	// )
-
-					// 	// console.log('solve', sol)
-
-					// 	initKS(
-					// 		generateProblem.problem,
-					// 		generateProblem.difficulty,
-					// 		[],
-					// 		// generateProblem.solution
-					// 		// 	.map((v, i) => {
-					// 		// 		const row = Math.floor(i / 9) + 1
-					// 		// 		const col = (i % 9) + 1
-					// 		// 		return {
-					// 		// 			row: row,
-					// 		// 			col: col,
-					// 		// 			val: v,
-					// 		// 			notes: [],
-					// 		// 		}
-					// 		// 	})
-					// 		// 	.filter((_, i) => {
-					// 		// 		return i !== 80
-					// 		// 	}),
-					// 		[],
-					// 		0,
-					// 		0
-					// 	)
-
-					// 	timer && clearInterval(timer)
-					// 	pb.setProgress({
-					// 		progress: 1,
-					// 		tipText: t('generatedSuccessfully', {
-					// 			ns: 'killerSudokuPage',
-					// 		}),
-					// 		onAnimationEnd() {
-					// 			pb.close()
-					// 			pb = undefined as any
-					// 		},
-					// 	})
-					// 	console.timeEnd('killerSudoku.generateProblem')
-					// }, 300)
+					console.timeEnd('killerSudoku.generateProblem')
 				},
 			})
 			let progress = 0.1
@@ -494,9 +460,9 @@ const KillerSudokuPage = () => {
 					clearInterval(timer)
 					return
 				}
-				console.log(pb)
 				pb?.setProgress({
 					progress,
+					delay: 1000,
 					tipText: t('generating', {
 						ns: 'killerSudokuPage',
 					}),
@@ -551,19 +517,19 @@ const KillerSudokuPage = () => {
 		if (isSolve > 0) return
 
 		if (num > 0 && num < 10 && row > 0 && col > 0) {
-			let val = 0
-			problem.some((v) => {
-				v.list.some((sv) => {
-					if (sv.col == col && sv.row == row && sv.val) {
-						val = sv.val
-						return true
-					}
-				})
-				return !!val
-			})
-			if (val > 0) {
-				return
-			}
+			// let val = 0
+			// problem.some((v) => {
+			// 	v.list.some((sv) => {
+			// 		if (sv.col == col && sv.row == row && sv.val) {
+			// 			val = sv.val
+			// 			return true
+			// 		}
+			// 	})
+			// 	return !!val
+			// })
+			// if (val > 0) {
+			// 	return
+			// }
 
 			const ans = [...answer]
 			let index = -1
@@ -574,6 +540,9 @@ const KillerSudokuPage = () => {
 				}
 			})
 			// console.log('index', index)
+			if (answer[index]?.default) {
+				return
+			}
 
 			if (index >= 0 && answer[index].val === num) {
 				eraseNumber(row, col)
@@ -595,12 +564,14 @@ const KillerSudokuPage = () => {
 								col: col,
 								val: 0,
 								notes: [num],
+								default: false,
 						  }
 						: {
 								row: row,
 								col: col,
 								val: num,
 								notes: [],
+								default: false,
 						  }
 				)
 
@@ -674,6 +645,27 @@ const KillerSudokuPage = () => {
 		setAnswer(ans)
 	}
 
+	const restartSudoku = () => {
+		alert({
+			title: t('restart', {
+				ns: 'killerSudokuPage',
+			}),
+			content: t('restartContent', {
+				ns: 'killerSudokuPage',
+			}),
+			cancelText: t('cancel', {
+				ns: 'prompt',
+			}),
+			confirmText: t('restart', {
+				ns: 'killerSudokuPage',
+			}),
+			onConfirm() {
+				setAnswer(answer.filter((v) => v.default))
+				setTime(0)
+			},
+		}).open()
+	}
+
 	const solveSudoku = () => {
 		alert({
 			title: t('getAnswers', {
@@ -689,46 +681,101 @@ const KillerSudokuPage = () => {
 				ns: 'killerSudokuPage',
 			}),
 			onConfirm() {
-				const ans: typeof answer = []
-				let sol = killerSudoku.solve(
-					problem.map((v) => {
-						return {
-							type: 'Sum',
-							val: v.val,
-							list: v.list.map((v) => {
-								return {
-									row: v.row,
-									col: v.col,
-									val: 0,
-								}
-							}),
-						}
-					}),
-					{
-						maxSolutionCount: 2,
-					}
-				)
-
-				console.log('sol', sol)
-
-				if (!sol.length) {
-					console.log('无解')
-					return
-				}
-				sol?.[0].forEach((v, i) => {
-					const row = Math.floor(i / 9) + 1
-					const col = (i % 9) + 1
-					// console.log(row, col)
-					ans.push({
-						row: row,
-						col: col,
-						val: v,
-					})
+				let pb = progressBar({
+					width: '100%',
+					maxWidth: '300px',
 				})
 
-				clearTimeout(timer.current)
-				initKS([], killerSudokuDiff, ans, [], time, 1)
-				deleteGame()
+				pb.open()
+				pb.setProgress({
+					progress: 0,
+					delay: 0,
+					tipText: t('solving', {
+						ns: 'killerSudokuPage',
+					}),
+					async onAnimationEnd() {
+						const ans: typeof answer = []
+						const worker = new WebWorker<
+							'KillerSudokuGenerateProblem' | 'KillerSudokuSolve'
+						>('/webworker-bundle.js')
+						const sol = await worker.postMessage<
+							ReturnType<typeof killerSudoku.solve>
+						>('KillerSudokuSolve', {
+							problem,
+							options: {
+								maxSolutionCount: 2,
+							},
+							// options: {
+							// 	log: false,
+							// },
+						})
+
+						console.log('sol', sol)
+
+						if (!sol.length) {
+							console.log('无解')
+							return
+						}
+						sol?.[0].forEach((v, i) => {
+							const row = Math.floor(i / 9) + 1
+							const col = (i % 9) + 1
+							// console.log(row, col)
+
+							let isFill = false
+
+							problem.some((sv) => {
+								isFill =
+									sv.list.filter(
+										(ssv) => ssv.row === row && ssv.col === col && ssv.val
+									).length === 1
+								return isFill
+							})
+							ans.push({
+								row: row,
+								col: col,
+								val: v,
+								default: isFill,
+							})
+						})
+
+						clearTimeout(timer.current)
+						setSolveDirectly(true)
+
+						initKS([], id, killerSudokuDiff, ans, [], time, 1)
+						deleteGame()
+						// console.log('problem', problem)
+						proTimer && clearInterval(proTimer)
+						pb.setProgress({
+							progress: 1,
+							delay: 500,
+							tipText: t('solvedSuccessfully', {
+								ns: 'killerSudokuPage',
+							}),
+							onAnimationEnd() {
+								console.log('end')
+								pb.close()
+								pb = undefined as any
+							},
+						})
+					},
+				})
+
+				let progress = 0.1
+
+				const proTimer = setInterval(() => {
+					progress += 0.1
+					if (!pb || progress > 0.9) {
+						clearInterval(proTimer)
+						return
+					}
+					pb?.setProgress({
+						progress,
+						delay: 1000,
+						tipText: t('solving', {
+							ns: 'killerSudokuPage',
+						}),
+					})
+				}, 1000)
 			},
 		}).open()
 	}
@@ -745,7 +792,9 @@ const KillerSudokuPage = () => {
 		// 	)
 		// })
 
-		for (let i = 0; i < 9; i++) {
+		ansList = [...ansList]
+
+		for (let i = 1; i <= 9; i++) {
 			// const row = Math.floor(i / 9)
 			// const col = i % 9
 			// 1、九宫格
@@ -807,7 +856,8 @@ const KillerSudokuPage = () => {
 			} = {}
 			const ansPalaceList = ansList.filter(
 				(v) =>
-					v.val && sudoku.getPalace((v.row - 1) * 9 + v.col - 1, v.row) === i
+					v.val &&
+					sudoku.getPalace((v.row - 1) * 9 + v.col - 1, v.row) + 1 === i
 			)
 			ansPalaceList.forEach((v) => {
 				!palaceAns[v.val] && (palaceAns[v.val] = 0)
@@ -815,7 +865,7 @@ const KillerSudokuPage = () => {
 			})
 			Object.keys(palaceAns).forEach((v) => {
 				if (palaceAns[Number(v)] >= 2) {
-					es[2].push(i)
+					es[2].push(i - 1)
 
 					const ansPalaceListTemp = ansPalaceList.filter((sv) => {
 						return sv.val === Number(v)
@@ -836,23 +886,31 @@ const KillerSudokuPage = () => {
 		)
 	}
 
-	const isSolveFunc = (ansList: typeof answer) => {
+	const isSolveFunc = async (ansList: typeof answer) => {
 		const answer = [...ansList]
 
-		problem.forEach((v) => {
-			v.list.forEach((sv) => {
-				if (sv.val) {
-					answer.push({
-						col: sv.col,
-						row: sv.row,
-						val: sv.val,
-					})
-				}
-			})
-		})
+		// problem.forEach((v) => {
+		// 	v.list.forEach((sv) => {
+		// 		if (
+		// 			sv.val &&
+		// 			!answer.filter((ssv) => sv.col === ssv.col && sv.row === ssv.row)
+		// 				.length
+		// 		) {
+		// 			answer.push({
+		// 				col: sv.col,
+		// 				row: sv.row,
+		// 				val: sv.val,
+		// 			})
+		// 		}
+		// 	})
+		// })
 
-		console.log(answer.reduce((pv, cv) => pv + cv.val, 0))
+		// console.log(
+		// 	answer,
+		// 	answer.reduce((pv, cv) => pv + cv.val, 0)
+		// )
 		if (answer.reduce((pv, cv) => pv + cv.val, 0) === 405) {
+			timer.current && clearTimeout(timer.current)
 			setIsSolve(2)
 		}
 	}
@@ -893,7 +951,8 @@ const KillerSudokuPage = () => {
 						history: history,
 						difficulty: killerSudokuDiff,
 						time: time,
-					} as KillerSudokuData,
+						id: id,
+					},
 				})
 			)
 		}, 1000)
@@ -919,6 +978,7 @@ const KillerSudokuPage = () => {
 		if (gameData) {
 			initKS(
 				gameData.problem,
+				gameData.id,
 				gameData.difficulty,
 				gameData.answer,
 				gameData.history,
@@ -927,6 +987,42 @@ const KillerSudokuPage = () => {
 			)
 		}
 		setIsRestoreGame(true)
+	}
+
+	const isRestoreGameFunc = async (openNewGameDropDown: boolean) => {
+		const isOldData = await checkGameOldData()
+		console.log(isOldData)
+		if (isOldData) {
+			alert({
+				title: t('savedGame', {
+					ns: 'prompt',
+				}),
+				content: t('savedGameContent', {
+					ns: 'prompt',
+				}).replace(
+					'${difficulty}',
+					t(difficulty.toLowerCase(), {
+						ns: 'killerSudokuPage',
+					})
+				),
+				cancelText: t('no', {
+					ns: 'prompt',
+				}),
+				confirmText: t('yes', {
+					ns: 'prompt',
+				}),
+				async onCancel() {
+					setIsRestoreGame(true)
+					setOpenNewGameDropDownMenu(openNewGameDropDown)
+					await dispatch(methods.game.deleteGame('KillerSudoku'))
+				},
+				async onConfirm() {
+					await restoreGame()
+				},
+			}).open()
+			return true
+		}
+		return false
 	}
 
 	const share = async () => {
@@ -1013,12 +1109,18 @@ const KillerSudokuPage = () => {
 
 	const initKS = (
 		problem: KillerSudokuProblemItem[],
+		id: string,
 		difficulty: SudokuDifficulty,
 		answer: KillerSudokuAnswerItem[],
 		history: KillerSudokuHistoryAnswerItem[],
 		time: number,
 		isSolve?: 0 | 1 | 2
 	) => {
+		// console.log('------initKS------')
+
+		setAnswer(answer || [])
+		setHistory(history || [])
+
 		if (problem.length) {
 			for (let i = 1; i < 8; i++) {
 				console.log(
@@ -1029,6 +1131,17 @@ const KillerSudokuPage = () => {
 				)
 			}
 			setProblem(problem)
+			if (!id) {
+				id = id || uuidv4()
+				storage.killerSudokuData.set(id, {
+					id,
+					problem,
+					time: 0,
+					status: 0,
+					difficulty: killerSudokuDiff,
+				})
+			}
+			setId(id)
 			setKillerSudokuDiff(difficulty)
 			setDifficulty(difficulty)
 
@@ -1043,14 +1156,13 @@ const KillerSudokuPage = () => {
 			setErrorSudoku([[], [], [], []])
 			setTime(time || 0)
 			setIsSolve(0)
+
+			setSolveDirectly(false)
 		}
 
 		if (isSolve !== undefined) {
 			setIsSolve(isSolve || 0)
 		}
-
-		setAnswer(answer || [])
-		setHistory(history || [])
 	}
 
 	const inputWidth =
@@ -1153,6 +1265,7 @@ const KillerSudokuPage = () => {
 																Query('/killerSudoku', {
 																	...router.query,
 																	d: e.detail.value,
+																	p: '',
 																})
 															)
 														},
@@ -1371,11 +1484,17 @@ const KillerSudokuPage = () => {
 														case 'NewGame':
 															generateKillerSudoku(difficulty, false)
 															break
+														case 'Restart':
+															restartSudoku()
+															break
 														case 'Solve':
 															solveSudoku()
 															break
 														case 'Share':
 															await share()
+															break
+														case 'Statistics':
+															setOpenStatisticsModal(true)
 															break
 
 														default:
@@ -1384,10 +1503,16 @@ const KillerSudokuPage = () => {
 												},
 											})}
 										>
-											{['NewGame', 'Solve', 'Share'].map((v, i) => {
+											{[
+												'NewGame',
+												'Restart',
+												'Solve',
+												'Statistics',
+												'Share',
+											].map((v, i) => {
 												if (
 													!problem.length &&
-													(v === 'NewGame' || v === 'Solve')
+													(v === 'NewGame' || v === 'Solve' || v === 'Restart')
 												) {
 													return ''
 												}
@@ -1405,7 +1530,11 @@ const KillerSudokuPage = () => {
 														>
 															{t(v.toLowerCase(), {
 																ns:
-																	v === 'Share' ? 'prompt' : 'killerSudokuPage',
+																	v === 'Share'
+																		? 'prompt'
+																		: v === 'Statistics'
+																		? 'statistics'
+																		: 'killerSudokuPage',
 															})}
 														</span>
 													</saki-menu-item>
@@ -1477,12 +1606,8 @@ const KillerSudokuPage = () => {
 							// )
 							let cNameArr: string[] = []
 							let minIndex = (row - 1) * 9 + col - 1
-							let val = 0
 							ksItem?.[0].list.forEach((v) => {
 								// console.log('ksItem', ksItem, v)
-								if (v.col === col && v.row === row && v.val) {
-									val = v.val
-								}
 								if (minIndex > (v.row - 1) * 9 + v.col - 1) {
 									minIndex = (v.row - 1) * 9 + v.col - 1
 								}
@@ -1537,7 +1662,7 @@ const KillerSudokuPage = () => {
 										(answerItem?.val === inputNum && inputNum
 											? 'highlight '
 											: '') +
-										(val > 0 ? 'filled ' : '') +
+										(answerItem?.default ? 'filled ' : '') +
 										(errorSudoku[0].includes(row) ? 'errorRow ' : '') +
 										(errorSudoku[1].includes(col) ? 'errorCol ' : '') +
 										(errorSudoku[2].includes(
@@ -1589,9 +1714,7 @@ const KillerSudokuPage = () => {
 										// }}
 										className='ks-item-val'
 									>
-										{isStart && (val || answerItem?.val)
-											? val || answerItem?.val
-											: ''}
+										{isStart && answerItem?.val ? answerItem?.val : ''}
 									</div>
 
 									<div className='ks-item-notes'>
@@ -1657,39 +1780,8 @@ const KillerSudokuPage = () => {
 											// height={baseSudokuWidth * 50 + 'px'}
 											ref={bindEvent({
 												tap: async () => {
-													const isOldData = await checkGameOldData()
-													console.log(isOldData)
-													if (isOldData) {
-														alert({
-															title: t('savedGame', {
-																ns: 'prompt',
-															}),
-															content: t('savedGameContent', {
-																ns: 'prompt',
-															}).replace(
-																'${difficulty}',
-																t(difficulty.toLowerCase(), {
-																	ns: 'killerSudokuPage',
-																})
-															),
-															cancelText: t('no', {
-																ns: 'prompt',
-															}),
-															confirmText: t('yes', {
-																ns: 'prompt',
-															}),
-															async onCancel() {
-																setIsRestoreGame(true)
-                                setOpenNewGameDropDownMenu(true)
-																await dispatch(
-																	methods.game.deleteGame('KillerSudoku')
-																)
-															},
-															async onConfirm() {
-																await restoreGame()
-															},
-                            }).open()
-                            return
+													if (await isRestoreGameFunc(true)) {
+														return
 													}
 
 													setIsRestoreGame(true)
@@ -1839,7 +1931,12 @@ const KillerSudokuPage = () => {
 														if (isSolve > 0) return
 														if (typeof v === 'number') {
 															setIsOpenErase(false)
+
 															if (inputMode === 'Touch') {
+																setSelectedGrid({
+																	row: -1,
+																	col: -1,
+																})
 																setInputNum(v)
 															} else {
 																fillNumber(
@@ -1969,6 +2066,18 @@ const KillerSudokuPage = () => {
 								}
 							)}
 						</div>
+						{/* <div className='ki-buttons'>
+							<saki-button height='100%' type='Primary'>
+								<span>
+									{t('share', {
+										ns: 'prompt',
+									})}
+								</span>
+							</saki-button>
+							<saki-button height='100%' type='Primary'>
+								<span>规则</span>
+							</saki-button>
+						</div> */}
 						{problem.length ? (
 							<div className='ki-numbers'>
 								{new Array(8)
@@ -1984,9 +2093,6 @@ const KillerSudokuPage = () => {
 						) : (
 							''
 						)}
-						{/* <div className='ki-buttons'>
-              a
-            </div> */}
 					</div>
 				</div>
 
@@ -2003,18 +2109,18 @@ const KillerSudokuPage = () => {
 								ns: 'killerSudokuPage',
 							})}
 						</p>
-						<p>
+						{/* <p>
 							{t('aboutSudokuContent2', {
 								ns: 'killerSudokuPage',
 							})}
-						</p>
+						</p> */}
 					</div>
 
-					<h1>
+					{/* <h1>
 						{t('sudokuGameRule', {
 							ns: 'killerSudokuPage',
 						})}
-					</h1>
+					</h1> */}
 					<div className='ks-i-content'>
 						<p>
 							{t('sudokuGameRuleContent1', {
@@ -2033,8 +2139,14 @@ const KillerSudokuPage = () => {
 						</p>
 					</div>
 
-					<h1>
+					{/* <h1>
 						{t('aboutKillerSudoku', {
+							ns: 'killerSudokuPage',
+						})}
+					</h1> */}
+
+					<h1>
+						{t('haoToPlay', {
 							ns: 'killerSudokuPage',
 						})}
 					</h1>
@@ -2047,11 +2159,11 @@ const KillerSudokuPage = () => {
 						</p>
 					</div>
 
-					<h1>
+					{/* <h1>
 						{t('killerSudokuRule', {
 							ns: 'killerSudokuPage',
 						})}
-					</h1>
+					</h1> */}
 
 					<div className='ks-i-content'>
 						<p>
@@ -2064,13 +2176,13 @@ const KillerSudokuPage = () => {
 								ns: 'killerSudokuPage',
 							})}
 						</p>
-						<br />
-						<p>
+						{/* <br /> */}
+						{/* <p>
 							{t('killerSudokuRuleContent3', {
 								ns: 'killerSudokuPage',
 							})}
-						</p>
-						<h3>
+						</p> */}
+						{/* <h3>
 							{t('killerSudokuRuleContent4', {
 								ns: 'killerSudokuPage',
 							}).replace('${number}', '2')}
@@ -2131,9 +2243,8 @@ const KillerSudokuPage = () => {
 							{t('killerSudokuRuleContent5', {
 								ns: 'killerSudokuPage',
 							})}
-						</p>
+						</p>*/}
 					</div>
-
 					<div className='ks-i-content'>
 						<p>
 							{t('welcomeToPlay', {
@@ -2148,7 +2259,7 @@ const KillerSudokuPage = () => {
 						</p>
 					</div>
 
-					<p
+					{/* <p
 						style={{
 							color: '#aaa',
 							textAlign: 'right',
@@ -2162,11 +2273,50 @@ const KillerSudokuPage = () => {
 							})}
 							)
 						</em>
-					</p>
+					</p> */}
 				</div>
 
 				<div className='ks-footer'></div>
+				{/* {mounted ? (
+					<saki-footer
+						ref={bindEvent({
+							changeLanguage: (e) => {
+								router.replace(
+									Query('/killerSudoku', {
+										...router.query,
+										lang: e.detail,
+									})
+								)
+								// dispatch(methods.config.setLanguage(e.detail.value))
+							},
+							changeAppearance: (e) => {
+								dispatch(configSlice.actions.setAppearance(e.detail.appearance))
+							},
+						})}
+						appearance={config.appearance}
+						app-title
+						github
+						github-link='https://github.com/ShiinaAiiko/killer-sudoku-nya'
+						github-text='Github'
+						blog
+          >
+            a
+          </saki-footer>
+				) : (
+					''
+				)} */}
 				<FooterComponent></FooterComponent>
+				{mounted ? (
+					<StatisticsComponent
+						visible={openStatisticsModal}
+						type='KillerSudoku'
+						onClose={() => {
+							setOpenStatisticsModal(false)
+						}}
+					></StatisticsComponent>
+				) : (
+					''
+				)}
 			</div>
 		</>
 	)

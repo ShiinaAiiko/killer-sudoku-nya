@@ -7,14 +7,19 @@ body,
 .tool-box-layout {
 	width: 100%;
 	height: 100%;
+	// &.Pink {
+	// }
+	// &.Blue {
+	// 	--saki-default-color: #3393ce !important;
+	// }
 	.tb-main {
 		width: 100%;
 		height: calc(100% - 50px);
 		.tb-main-wrap {
 			width: 100%;
 			max-width: 880px;
-      margin: 0 auto;
-      overflow: hidden;
+			margin: 0 auto;
+			overflow: hidden;
 		}
 	}
 }

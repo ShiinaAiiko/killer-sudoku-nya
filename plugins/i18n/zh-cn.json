@@ -26,8 +26,11 @@
 		"viewAnswers": "查看答案",
 		"getAnswers": "获取答案",
 		"getAnswersContent": "游戏中，是否直接解出该数独？",
+		"solving": "正在解题",
 		"solvedSuccessfully": "解题成功!",
 		"solvedSuccessfullyContent": "您已成功解出杀手数独[${difficulty}]，耗时${m}分${s}秒",
+		"newRecord": "新纪录！",
+		"newRecordContent": "您已成功解出杀手数独[${difficulty}]，耗时${m}分${s}秒并创下新记录！",
 		"newgameContent": "游戏中，是否创建新的数独游戏？",
 
 		"keyboardInput": "键盘输入",
@@ -41,6 +44,7 @@
 		"shareProblem": "与问题一起分享",
 		"shareProblemContent": "是否邀请好友一起玩此数独问题？(好友打开链接即可直接玩此数独问题）",
 
+		"haoToPlay": "如何玩杀手数独？",
 		"aboutSudoku": "关于数独",
 		"aboutSudokuContent1": "数独（Sudoku / すうどく）是一种数学逻辑游戏，游戏由9×9个格子组成，玩家需要根据格子提供的数字推理出其他格子的数字。",
 		"aboutSudokuContent2": "这种游戏只需要逻辑思维能力，与数字运算无关，所以数学不好的人也很适合。虽然玩法简单，但提供的数字却千变万化，所以不少教育者认为数独是锻炼脑筋的好方法。",
@@ -57,7 +61,22 @@
 		"killerSudokuRuleContent4": "${number}个数字的区",
 		"killerSudokuRuleContent5": "更大的数不常出现且用途不大。",
 		"welcomeToPlay": "希望你玩的开心！",
-		"fromWiki": "部分介绍源自Wikipedia"
+		"fromWiki": "部分介绍源自Wikipedia",
+
+		"restart": "重新开始",
+		"restartContent": "您确定要重新开始当前游戏吗？"
+	},
+	"statistics": {
+		"statistics": "统计",
+		"games": "游戏场次",
+		"gamesPlayed": "已玩",
+		"gamesWon": "已通关",
+		"winRate": "通关率",
+		"time": "游戏耗时",
+		"bestTime": "最快耗时",
+		"averageTime": "平均耗时",
+		"latestTime": "最近一次耗时",
+		"gameTime": "游戏时长"
 	},
 	"prompt": {
 		"copy": "复制",
@@ -72,6 +91,13 @@
 		"savedGame": "已保存的游戏",
 		"savedGameContent": "你还想继续之前的数独游戏吗?",
 		"yes": "是的",
-		"no": "算了"
+		"no": "算了",
+
+		"generatingBackground": "后台生成中",
+
+		"clearHistoricalStatistics": "清除历史统计",
+		"clear": "清除",
+		"clearHistoricalStatisticsContent": "您确定要清除历史统计数据吗？（这是不可逆的操作）",
+		"clearuccessively": "清除成功！"
 	}
 }

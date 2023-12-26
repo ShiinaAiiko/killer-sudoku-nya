@@ -7,6 +7,7 @@ import {
 import md5 from 'blueimp-md5'
 import store, { ActionParams } from '.'
 import { WebStorage } from '@nyanyajs/utils'
+import { StorageKillerSudokuItem } from './game'
 // import { User } from './user'
 // import { WebStorage } from '@nyanyajs/utils'
 
@@ -14,6 +15,10 @@ export let storage = {
 	global: new WebStorage({
 		storage: 'IndexedDB',
 		baseLabel: 'global',
+	}),
+	killerSudokuData: new WebStorage<string, StorageKillerSudokuItem>({
+		storage: 'IndexedDB',
+		baseLabel: 'killerSudokuData',
 	}),
 	// token: new WebStorage<string, string>({
 	// 	storage: 'IndexedDB',

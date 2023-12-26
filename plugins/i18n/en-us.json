@@ -26,8 +26,11 @@
 		"viewAnswers": "View answers",
 		"getAnswers": "Get answers",
 		"getAnswersContent": "Playing now, Did you solve the Sudoku?",
+		"solving": "Solving",
 		"solvedSuccessfully": "Solved successfully!",
-		"solvedSuccessfullyContent": "You have successfully solved Killer Sudoku[${difficulty}], Time: ${m} minutes and ${s} seconds",
+		"solvedSuccessfullyContent": "You have successfully solved Killer Sudoku[${difficulty}], Time: ${m}m ${s}s",
+		"newRecord": "New record!",
+		"newRecordContent": "You have successfully solved Killer Sudoku [${difficulty}] and set a new record!, Time: ${m}m ${s}s",
 		"newgameContent": "Playing now, do you want to create a new Sudoku game?",
 
 		"keyboardInput": "Keyboard input",
@@ -41,6 +44,7 @@
 		"shareProblem": "Share with question",
 		"shareProblemContent": "Do you want to invite friends to play this Sudoku problem together? (Friends can play this Sudoku problem by opening the link)",
 
+		"haoToPlay": "How to play Killer Sudoku?",
 		"aboutSudoku": "About Sudoku",
 		"aboutSudokuContent1": "Sudoku (すうどく) is a mathematical logic game. The game consists of a 9×9 grid. Players need to deduce the numbers in other grids based on the numbers provided by the grid.",
 		"aboutSudokuContent2": "This kind of game only requires logical thinking skills and has nothing to do with number operations, so it is also suitable for people who are not good at mathematics. Although the gameplay is simple, the numbers provided are ever-changing, so many educators believe that Sudoku is a good way to exercise their brains.",
@@ -57,7 +61,22 @@
 		"killerSudokuRuleContent4": "${number} cells",
 		"killerSudokuRuleContent5": "Larger numbers occur infrequently and are of little use.",
 		"welcomeToPlay": "Hope you have a great time!",
-		"fromWiki": "From Wikipedia"
+		"fromWiki": "From Wikipedia",
+
+		"restart": "Restart",
+		"restartContent": "Are you sure you want to restart the current game?"
+	},
+	"statistics": {
+		"statistics": "Statistics",
+		"games": "Games",
+		"gamesPlayed": "Games Played",
+		"gamesWon": "Games Won",
+		"winRate": "Win Rate",
+		"time": "Time",
+		"bestTime": "Best Time",
+		"averageTime": "Average Time",
+		"latestTime": "Latest Time",
+		"gameTime": "Game Time"
 	},
 	"prompt": {
 		"copy": "Copy",
@@ -72,6 +91,13 @@
 		"savedGame": "Saved game",
 		"savedGameContent": "Do you want to continue your previous Sudoku game?",
 		"yes": "Yes",
-		"no": "No"
+		"no": "No",
+
+		"generatingBackground": "Generating in background",
+
+		"clearHistoricalStatistics": "Clear historical statistics",
+		"clear": "Clear",
+		"clearHistoricalStatisticsContent": "Are you sure you want to clear historical statistics? (This is an irreversible operation)",
+		"clearuccessfully": "Clear successfully!"
 	}
 }
