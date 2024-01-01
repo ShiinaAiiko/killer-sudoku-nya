@@ -1,4 +1,4 @@
-FROM node:16.15.1 as BUILD_IMAGE
+FROM node:18.17.1 as BUILD_IMAGE
 
 WORKDIR /app
 
@@ -16,9 +16,10 @@ COPY . .
 RUN \
   ./release.sh buildTime && \
   yarn build-webworker && \
+  ./release.sh download:saki-ui-react && \
   yarn export
 
-FROM node:16.13.1-alpine3.13
+FROM node:18.17.1-alpine3.18
 
 ENV CLIENT_ENV=production
 

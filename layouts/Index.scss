@@ -12,6 +12,13 @@ body,
 	// &.Blue {
 	// 	--saki-default-color: #3393ce !important;
 	// }
+
+	.tb-h-r-generating {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+	}
+
 	.tb-main {
 		width: 100%;
 		height: calc(100% - 50px);

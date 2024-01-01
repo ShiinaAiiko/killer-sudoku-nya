@@ -7,15 +7,22 @@ import {
 import { getI18n } from 'react-i18next'
 import store, { ActionParams } from '.'
 
-import { Languages, languages, defaultLanguage } from '../plugins/i18n/i18n'
+import i18n, {
+	Languages,
+	changeLanguage,
+	defaultLanguage,
+	detectionLanguage,
+} from '../plugins/i18n/i18n'
 import { storage } from './storage'
-import { buildTime, version } from '../config'
+import { appListUrl, buildTime, version } from '../config'
+import axios from 'axios'
 
 export type DeviceType = 'Mobile' | 'Pad' | 'PC'
 export type LanguageType = Languages | 'system'
 export let deviceType: DeviceType | undefined
 
 export const language: LanguageType = defaultLanguage as any
+export const languages = ['system'].concat(i18n.languages)
 export const appearances = ['Pink', 'Blue']
 export const appearanceColors = {
 	Pink: '#f29cb2',
@@ -26,8 +33,9 @@ const state = {
 	version: version,
 	buildTime: buildTime,
 	language: language,
+	defaultLanguage: defaultLanguage,
 	lang: '',
-	languages: ['system', ...languages],
+	languages,
 	deviceType,
 	loadStatus: {
 		sakiUI: false,
@@ -38,11 +46,26 @@ const state = {
 	},
 	appearances,
 	appearance: 'Pink' as 'Pink' | 'Blue',
+	appList: [] as {
+		title: {
+			[lang: string]: string
+		}
+		url: string
+	}[],
 }
 export const configSlice = createSlice({
 	name: 'config',
 	initialState: state,
 	reducers: {
+		setAppList: (
+			state,
+			params: {
+				payload: (typeof state)['appList']
+				type: string
+			}
+		) => {
+			state.appList = params.payload
+		},
 		setSakiUILoadStatus: (
 			state,
 			params: {
@@ -109,33 +132,23 @@ export const configMethods = {
 			)
 		)
 		thunkAPI.dispatch(configMethods.getDeviceType())
+
+		const res = await axios({
+			method: 'GET',
+			url: appListUrl,
+		})
+		res?.data?.appList &&
+			thunkAPI.dispatch(configSlice.actions.setAppList(res.data.appList))
 	}),
 	setLanguage: createAsyncThunk(
 		'config/setLanguage',
 		async (language: LanguageType, thunkAPI) => {
 			thunkAPI.dispatch(configSlice.actions.setLanguage(language))
 
-			// console.log('navigator.language', language, navigator.language)
 			if (language === 'system') {
-				const languages = ['zh-CN', 'zh-TW', 'en-US']
-				if (languages.indexOf(navigator.language) >= 0) {
-					getI18n().changeLanguage(navigator.language)
-				} else {
-					switch (navigator.language.substring(0, 2)) {
-						case 'zh':
-							getI18n().changeLanguage('zh-CN')
-							break
-						case 'en':
-							getI18n().changeLanguage('en-US')
-							break
-
-						default:
-							getI18n().changeLanguage('en-US')
-							break
-					}
-				}
+				changeLanguage(detectionLanguage() as any)
 			} else {
-				getI18n().changeLanguage(language)
+				changeLanguage(language)
 			}
 
 			store.dispatch(configSlice.actions.setLang(getI18n().language))

@@ -44,6 +44,7 @@ build.tgz
 /public/workbox*.js.map
 /public/worker*.js.map
 /public/webworker-bundle.js
+/public/languages
 
 /webworker/dist
 /components/saki-ui-react

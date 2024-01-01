@@ -3,10 +3,8 @@ import Head from 'next/head'
 import { Router } from 'next/router'
 import '../layouts/Index.scss'
 import './killerSudoku.scss'
-import '../components/Footer.scss'
-import '../components/Header.scss'
-import '../components/MenuDropdown.scss'
 import '../components/Statistics.scss'
+import IndexLayout from '../layouts/Index'
 
 import { useRouter } from 'next/router'
 import { Provider } from 'react-redux'
@@ -26,15 +24,25 @@ nyanyalog.config({
 })
 // import '../assets/style/base.scss'
 
-export default function App({ Component, pageProps }: any) {
+function App({ Component, pageProps }: any) {
 	const getLayout = Component.getLayout || ((page: any) => page)
 
 	const router = useRouter()
 
+	// console.log('getLayout', !!getLayout())
 	return (
 		<Provider store={store}>
 			<Init />
-			{getLayout(<Component router={router} {...pageProps} />)}
+			{/* <IndexLayout>
+				<Component router={router} {...pageProps} />
+			</IndexLayout> */}
+			{getLayout() ? (
+				getLayout(<Component router={router} {...pageProps} />, pageProps)
+			) : (
+				<Component router={router} {...pageProps} />
+			)}
 		</Provider>
 	)
 }
+
+export default (App)

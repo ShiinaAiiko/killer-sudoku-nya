@@ -6,7 +6,7 @@ branch="main"
 configFilePath="config.pro.json"
 registryUrl="https://registry.npmmirror.com/"
 DIR=$(cd $(dirname $0) && pwd)
-allowMethods=("buildTime unzip zip protos stop rm npmconfig install gitpull dockerremove start logs")
+allowMethods=("download:saki-ui-react buildTime unzip zip protos stop rm npmconfig install gitpull dockerremove start logs")
 
 npmconfig() {
   echo "-> 配置npm config"
@@ -100,6 +100,12 @@ unzip() {
 
 zip() {
   tar cvzf /build.tgz -C /dist .
+}
+
+download:saki-ui-react() {
+  wget https://saki-ui.aiiko.club/packages/saki-ui-react-v1.0.1.tgz -O saki-ui-react.tgz
+  tar zxvf ./saki-ui-react.tgz -C ./components
+  rm -rf ./saki-ui*
 }
 
 stop() {

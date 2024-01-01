@@ -46,7 +46,9 @@ declare global {
 			'saki-animation-loading': any
 			'saki-color': any
 			'saki-init-language': any
-			'saki-footer': any
+			'saki-template-footer': any
+			'saki-template-header': any
+      'saki-template-menu-dropdown': any
 		}
 	}
 	namespace Window {

@@ -16,6 +16,7 @@
 	},
 	"killerSudokuPage": {
 		"pageTitle": "殺手數獨喵",
+		"pageDescription": "可免費在Web上玩的數獨遊戲，有4個難度可選擇，DLX演算法校驗產生數獨問題。 歡迎來挑戰數獨並享受解題的快樂！ ~",
 		"easy": "簡單",
 		"moderate": "中",
 		"hard": "困難",

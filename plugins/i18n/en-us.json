@@ -16,6 +16,7 @@
 	},
 	"killerSudokuPage": {
 		"pageTitle": "Killer Sudoku Nya",
+		"pageDescription": "A Sudoku game that can be played on the Web for free, with 4 difficulty levels to choose from, and DLX algorithm verification to generate Sudoku problems. Welcome to challenge Sudoku and enjoy solving puzzles!~",
 		"easy": "Easy",
 		"moderate": "Moderate",
 		"hard": "Hard",

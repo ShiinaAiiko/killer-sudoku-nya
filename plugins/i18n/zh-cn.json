@@ -16,6 +16,7 @@
 	},
 	"killerSudokuPage": {
 		"pageTitle": "杀手数独喵",
+		"pageDescription": "可免费在Web上玩的数独游戏，有4个难度可选择，DLX算法实时生成数独问题。欢迎来挑战数独并享受解题的快乐！~",
 		"easy": "简单",
 		"moderate": "中等",
 		"hard": "困难",

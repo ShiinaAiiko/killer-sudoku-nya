@@ -1,28 +1,13 @@
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { useTranslation } from 'react-i18next'
+import { useEffect, useRef, useState } from 'react'
 
-const IndexPage = () => {
-	const { t, i18n } = useTranslation('')
+function IndexPage(props: any) {
 	const router = useRouter()
-
 	useEffect(() => {
 		router.replace('/killerSudoku')
 	}, [])
 
-	return (
-		<>
-			<Head>
-				<title>
-					{t('appTitle', {
-						ns: 'common',
-					})}
-				</title>
-			</Head>
-			<div></div>
-		</>
-	)
+	return <div></div>
 }
-
 export default IndexPage

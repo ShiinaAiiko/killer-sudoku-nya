@@ -27,3 +27,5 @@ README.md
 /node_modules
 package-lock.json
 # yarn.lock
+
+/public/languages

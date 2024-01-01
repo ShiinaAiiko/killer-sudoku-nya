@@ -12,33 +12,63 @@ import {
 	methods,
 	configSlice,
 } from '../store'
-import { useTranslation } from 'react-i18next'
 // import { userAgent } from './userAgent'
 import { userAgent, CipherSignature, NyaNyaWasm } from '@nyanyajs/utils'
 import debounce from '@nyanyajs/utils/dist/debounce'
 import * as nyanyalog from 'nyanyajs-log'
-import HeaderComponent from '../components/Header'
 import { bindEvent } from '@saki-ui/core'
 import { language } from '../store/config'
 import { storage } from '../store/storage'
-import { languages, resources } from '../plugins/i18n/i18n'
+import {
+	changeLanguage,
+	defaultLanguage,
+	detectionLanguage,
+	languages,
+	resources,
+	t,
+	i18n,
+} from '../plugins/i18n/i18n'
 import {
 	SakiBaseStyle,
 	SakiColor,
-	SakiFooter,
+	SakiTemplateMenuDropdown,
 	SakiInit,
 	SakiInitLanguage,
-} from '../components/saki-ui-react'
+	SakiTemplateFooter,
+	SakiTemplateHeader,
+	SakiAnimationLoading,
+} from '../components/saki-ui-react/components'
+import { Query } from '../plugins/methods'
 // import { SakiFooter } from '../saki-ui'
 // import parserFunc from 'ua-parser-js'
 
-const ToolboxLayout = ({ children }: propsType): JSX.Element => {
-	const { t, i18n } = useTranslation()
+const IndexLayout = ({ pageProps, children }: any): JSX.Element => {
+	const { lang } = pageProps
+	// const { t, i18n } = useTranslation()
+  if (pageProps && process.env.OUTPUT === 'export') {
+		const lang =
+			pageProps?.router?.asPath?.split('/')?.[1] ||
+			pageProps?.lang ||
+			(typeof window === 'undefined' ? defaultLanguage : detectionLanguage())
+
+    console.log(lang)
+		pageProps && i18n.language !== lang && changeLanguage(lang)
+	}
+
+	useEffect(() => {
+		const l = lang || 'system'
+
+		l && dispatch(methods.config.setLanguage(l))
+	}, [lang])
+
 	const [mounted, setMounted] = useState(false)
 	// console.log('Index Layout')
 
+	// console.log('children', mounted, children.lang, lang)
 	const router = useRouter()
 	const config = useSelector((state: RootState) => state.config)
+	const game = useSelector((state: RootState) => state.game)
+	const layout = useSelector((state: RootState) => state.layout)
 	const dispatch = useDispatch<AppDispatch>()
 
 	const [showLanguageDropdown, setShowLanguageDropdown] = useState(false)
@@ -99,11 +129,17 @@ const ToolboxLayout = ({ children }: propsType): JSX.Element => {
 			const lang = config.languages.includes(queryLang as any)
 				? (queryLang as any)
 				: (await storage.global.get('language')) || 'system'
-			console.log('lang', lang, config.languages, queryLang, router.query)
-			dispatch(methods.config.setLanguage(lang))
+			// console.log('lang', lang, config.languages, queryLang, router.query)
+			// dispatch(methods.config.setLanguage(lang))
 		}
 		init()
 	}, [router.query])
+
+	// useEffect(() => {
+	// 	router.locale && dispatch(methods.config.setLanguage(router.locale as any))
+	// }, [router.locale])
+
+	const basePathname = router.pathname.replace('/[lang]', '')
 
 	return (
 		<>
@@ -139,7 +175,7 @@ const ToolboxLayout = ({ children }: propsType): JSX.Element => {
 							<SakiInitLanguage
 								language={config.language}
 								lang={config.lang}
-								defalutLanguage={'en-US'}
+								defalutLanguage={config.defaultLanguage}
 								ref={(e) => {
 									e?.initLanguage?.(config.languages, resources as any)
 								}}
@@ -159,29 +195,114 @@ const ToolboxLayout = ({ children }: propsType): JSX.Element => {
 									config.appearance === 'Blue' ? '#f1f1f1' : '#f1f1f1'
 								}
 							></SakiColor>
+							<SakiBaseStyle></SakiBaseStyle>
 						</>
 					) : (
 						''
 					)}
-					{mounted ? <SakiBaseStyle></SakiBaseStyle> : ''}
-
-					<HeaderComponent visible={true} fixed={false}></HeaderComponent>
+					{mounted ? (
+						<SakiTemplateHeader
+							meow-apps
+							// fixed
+							visible
+						>
+							<div slot='left'>
+								<SakiTemplateMenuDropdown
+									ref={(e) => {
+										e?.setAppList?.(config.appList)
+									}}
+									app-text={layout.headerLogoText}
+								></SakiTemplateMenuDropdown>
+							</div>
+							<div slot={'right'}>
+								{game.generateKillerSudokuStatus === 0 ? (
+									<div className='tb-h-r-generating'>
+										<SakiAnimationLoading
+											type='rotateEaseInOut'
+											width='20px'
+											height='20px'
+											border='3px'
+											border-color='var(--saki-default-color)'
+										/>
+										<span
+											style={{
+												color: '#555',
+												fontSize: '12px',
+											}}
+										>
+											{t('generatingBackground', {
+												ns: 'prompt',
+											})}
+										</span>
+									</div>
+								) : (
+									''
+								)}
+							</div>
+						</SakiTemplateHeader>
+					) : (
+						''
+					)}
 					<div className={'tb-main scrollBarHover'}>
 						<div className='tb-main-wrap'>{children}</div>
-						{/* 1111111 1111
 						{mounted ? (
-							<SakiFooter
+							<SakiTemplateFooter
 								onChangeLanguage={(e) => {
-									console.log(e)
+									// router.locale = e.detail
+									console.log(router, e)
+									console.log(router.locale)
+									console.log(
+										Query(router.pathname, {
+											...router.query,
+											lang: '',
+										})
+									)
+									console.log(pageProps.difficulty)
+									const pathname = Query(
+										(e.detail === 'system' ? '' : '/' + e.detail) +
+											basePathname,
+										{
+											...router.query,
+											lang: '',
+										}
+									)
+									console.log('pathname', pathname)
+									router.replace(pathname)
+									// router.replace(pathname, pathname, {
+									// 	locale:
+									// 		e.detail === 'system' ? detectionLanguage() : e.detail,
+									// })
+									// dispatch(methods.config.setLanguage(e.detail.value))
 								}}
+								onChangeAppearance={(e) => {
+									dispatch(
+										configSlice.actions.setAppearance(e.detail.appearance)
+									)
+								}}
+								appearance={config.appearance}
+								app-title={t('appTitle', {
+									ns: 'common',
+								})}
 								github
-								githubText='1'
-								appLink='1'
-							></SakiFooter>
+								github-link='https://github.com/ShiinaAiiko/killer-sudoku-nya'
+								github-text='Github'
+								blog
+							></SakiTemplateFooter>
 						) : (
 							''
 						)}
-						11111111111 */}
+
+						<div style={{ display: 'none' }}>
+							{languages.map((v) => {
+								return (
+									<a key={v} href={'/' + v + basePathname}>
+										{t(v, {
+											ns: 'languages',
+										})}
+									</a>
+								)
+							})}
+						</div>
 					</div>
 				</>
 			</div>
@@ -189,4 +310,4 @@ const ToolboxLayout = ({ children }: propsType): JSX.Element => {
 	)
 }
 
-export default ToolboxLayout
+export default IndexLayout
