@@ -38,29 +38,37 @@ import {
 	SakiTemplateHeader,
 	SakiAnimationLoading,
 } from '../components/saki-ui-react/components'
-import { Query } from '../plugins/methods'
+import { Query, isInPwa } from '../plugins/methods'
+import { meowApps, sakiui } from '../config'
+import { useTranslation } from 'react-i18next'
 // import { SakiFooter } from '../saki-ui'
 // import parserFunc from 'ua-parser-js'
 
 const IndexLayout = ({ pageProps, children }: any): JSX.Element => {
+	const { t, i18n } = useTranslation()
+
 	const { lang } = pageProps
-	// const { t, i18n } = useTranslation()
-  if (pageProps && process.env.OUTPUT === 'export') {
+	if (pageProps && process.env.OUTPUT === 'export') {
 		const lang =
 			pageProps?.router?.asPath?.split('/')?.[1] ||
 			pageProps?.lang ||
 			(typeof window === 'undefined' ? defaultLanguage : detectionLanguage())
+		// isInPwa()
 
-    console.log(lang)
+		// console.log(
+		// 	'isInPwa',
+		// 	isInPwa(),
+		// 	detectionLanguage() as any,
+		// )
 		pageProps && i18n.language !== lang && changeLanguage(lang)
 	}
+	console.log('lang', lang)
 
 	useEffect(() => {
 		const l = lang || 'system'
 
 		l && dispatch(methods.config.setLanguage(l))
 	}, [lang])
-
 	const [mounted, setMounted] = useState(false)
 	// console.log('Index Layout')
 
@@ -144,11 +152,21 @@ const IndexLayout = ({ pageProps, children }: any): JSX.Element => {
 	return (
 		<>
 			<Head>
-				<meta httpEquiv='X-UA-Compatible' content='IE=edge'></meta>
+				<title>
+					{t('appTitle', {
+						ns: 'common',
+					})}
+				</title>
 				<meta
-					name='viewport'
-					content='width=device-width, initial-scale=1.0'
-				></meta>
+					name='description'
+					content={t('pageDescription', {
+						ns: 'killerSudokuPage',
+					})}
+				/>
+				<meta
+					name='keywords'
+					content='Sudoku,Killer Sudoku,数独,杀手数独,數獨,殺手數獨,ナンプレ,キラーナンプレ'
+				/>
 			</Head>
 			<div className={'tool-box-layout ' + config.appearance}>
 				<>
@@ -162,7 +180,7 @@ const IndexLayout = ({ pageProps, children }: any): JSX.Element => {
 									// setProgressBar(.6)
 									;(window as any)?.sakiui?.initAppearances?.([
 										{
-											value: 'Pink',
+                      value: 'Pink',
 											color: '#f29cb2',
 										},
 										{
@@ -228,6 +246,7 @@ const IndexLayout = ({ pageProps, children }: any): JSX.Element => {
 											style={{
 												color: '#555',
 												fontSize: '12px',
+												wordBreak: 'break-all',
 											}}
 										>
 											{t('generatingBackground', {
@@ -244,53 +263,65 @@ const IndexLayout = ({ pageProps, children }: any): JSX.Element => {
 						''
 					)}
 					<div className={'tb-main scrollBarHover'}>
-						<div className='tb-main-wrap'>{children}</div>
-						{mounted ? (
-							<SakiTemplateFooter
-								onChangeLanguage={(e) => {
-									// router.locale = e.detail
-									console.log(router, e)
-									console.log(router.locale)
-									console.log(
-										Query(router.pathname, {
-											...router.query,
-											lang: '',
-										})
-									)
-									console.log(pageProps.difficulty)
-									const pathname = Query(
-										(e.detail === 'system' ? '' : '/' + e.detail) +
-											basePathname,
-										{
-											...router.query,
-											lang: '',
-										}
-									)
-									console.log('pathname', pathname)
-									router.replace(pathname)
-									// router.replace(pathname, pathname, {
-									// 	locale:
-									// 		e.detail === 'system' ? detectionLanguage() : e.detail,
-									// })
-									// dispatch(methods.config.setLanguage(e.detail.value))
-								}}
-								onChangeAppearance={(e) => {
-									dispatch(
-										configSlice.actions.setAppearance(e.detail.appearance)
-									)
-								}}
-								appearance={config.appearance}
-								app-title={t('appTitle', {
-									ns: 'common',
-								})}
-								github
-								github-link='https://github.com/ShiinaAiiko/killer-sudoku-nya'
-								github-text='Github'
-								blog
-							></SakiTemplateFooter>
-						) : (
-							''
-						)}
+						<div className='tb-main-wrap'>
+							{children}
+
+							{mounted ? (
+								<SakiTemplateFooter
+									onChangeLanguage={async (e) => {
+										// router.locale = e.detail
+										console.log(router, e)
+										console.log(router.locale)
+										console.log(
+											Query(router.pathname, {
+												...router.query,
+												lang: '',
+											})
+										)
+										console.log(pageProps.difficulty)
+										const pathname = Query(
+											(e.detail === 'system' ? '' : '/' + e.detail) +
+												basePathname,
+											{
+												...router.query,
+												lang: '',
+											}
+										)
+										console.log('pathname', pathname)
+										await storage.global.set(
+											'pathname',
+											Query(pathname.split('?')?.[0], {
+												...router.query,
+												lang: '',
+												d: '',
+											})
+										)
+										router.replace(pathname)
+										// router.replace(pathname, pathname, {
+										// 	locale:
+										// 		e.detail === 'system' ? detectionLanguage() : e.detail,
+										// })
+										// dispatch(methods.config.setLanguage(e.detail.value))
+									}}
+                  onChangeAppearance={(e) => {
+                    console.log(e)
+										dispatch(
+											configSlice.actions.setAppearance(e.detail.value)
+										)
+									}}
+									appearance={config.appearance}
+									app-title={t('appTitle', {
+										ns: 'common',
+									})}
+									github
+									github-link='https://github.com/ShiinaAiiko/killer-sudoku-nya'
+									github-text='Github'
+									blog
+								></SakiTemplateFooter>
+							) : (
+								''
+							)}
+						</div>
 
 						<div style={{ display: 'none' }}>
 							{languages.map((v) => {
@@ -305,6 +336,8 @@ const IndexLayout = ({ pageProps, children }: any): JSX.Element => {
 						</div>
 					</div>
 				</>
+				{/* <script noModule src={sakiui.jsurl}></script>
+				<script type='module' src={sakiui.esmjsurl}></script> */}
 			</div>
 		</>
 	)

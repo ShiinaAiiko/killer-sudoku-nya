@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { Router } from 'next/router'
 import '../layouts/Index.scss'
-import './killerSudoku.scss'
+import './[lang]/killerSudoku.scss'
 import '../components/Statistics.scss'
 import IndexLayout from '../layouts/Index'
 
@@ -45,4 +45,4 @@ function App({ Component, pageProps }: any) {
 	)
 }
 
-export default (App)
+export default App

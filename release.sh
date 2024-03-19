@@ -6,7 +6,7 @@ branch="main"
 configFilePath="config.pro.json"
 registryUrl="https://registry.npmmirror.com/"
 DIR=$(cd $(dirname $0) && pwd)
-allowMethods=("download:saki-ui-react buildTime unzip zip protos stop rm npmconfig install gitpull dockerremove start logs")
+allowMethods=("generateSiteMap download:generateSiteMap download:saki-ui-react buildTime unzip zip protos stop rm npmconfig install gitpull dockerremove start logs")
 
 npmconfig() {
   echo "-> 配置npm config"
@@ -106,6 +106,19 @@ download:saki-ui-react() {
   wget https://saki-ui.aiiko.club/packages/saki-ui-react-v1.0.1.tgz -O saki-ui-react.tgz
   tar zxvf ./saki-ui-react.tgz -C ./components
   rm -rf ./saki-ui*
+}
+
+download:generateSiteMap() {
+  wget https://apps.aiiko.club/generateSiteMap.js -O generateSiteMap.js
+}
+
+generateSiteMap() {
+  download:generateSiteMap
+
+  node ./generateSiteMap.js \
+    path=./out \
+    out=./out \
+    domain=https://sudoku.aiiko.club
 }
 
 stop() {

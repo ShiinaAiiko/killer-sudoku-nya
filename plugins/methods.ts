@@ -7,6 +7,7 @@ import { useSelector, useStore, useDispatch } from 'react-redux'
 import axios, { AxiosRequestConfig } from 'axios'
 
 import store, { userSlice } from '../store'
+import { sakiui } from '../config'
 
 export const getRegExp = (type: 'email') => {
 	return /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
@@ -86,4 +87,34 @@ export const GetTime = (timestamp: number) => {
 	const m = Math.floor(timestamp / 60) % 60
 	const s = Math.floor(timestamp % 60)
 	return h + 'h ' + m + 'm ' + s + 's'
+}
+
+export const isInPwa = () => {
+	// return true
+	return (
+		window.matchMedia('(display-mode: standalone)').matches ||
+		(window.navigator as any)?.standalone ||
+		document.referrer.includes('android-app://')
+	)
+}
+
+export const addSakiUI = () => {
+	// let isExist = false
+	// let scEle = document.querySelectorAll('script')
+	// scEle.forEach((v) => {
+	// 	if (v.src.indexOf('saki-ui') >= 0) {
+	// 		isExist = true
+	// 		return true
+	// 	}
+	// })
+  // if (isExist) return
+  
+	const scriptJS = document.createElement('script')
+	scriptJS.setAttribute('noModule', 'true')
+	scriptJS.setAttribute('src', sakiui.jsurl)
+	const scriptEsmJS = document.createElement('script')
+	scriptEsmJS.setAttribute('type', 'module')
+	scriptEsmJS.setAttribute('src', sakiui.esmjsurl)
+	document.body.appendChild(scriptJS)
+	document.body.appendChild(scriptEsmJS)
 }

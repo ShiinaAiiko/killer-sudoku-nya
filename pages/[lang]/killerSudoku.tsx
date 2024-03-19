@@ -1289,16 +1289,6 @@ function KillerSudokuPage(props: any) {
 							ns: 'common',
 						})}
 				</title>
-				<meta
-					name='description'
-					content={t('pageDescription', {
-						ns: 'killerSudokuPage',
-					})}
-				/>
-				<meta
-					name='keywords'
-					content='Sudoku,Killer Sudoku,数独,杀手数独,數獨,殺手數獨,ナンプレ,キラーナンプレ'
-				/>
 			</Head>
 			<div className={'killer-sudoku-page ' + config.deviceType}>
 				<div className='ks-header'>

@@ -16,6 +16,7 @@ import i18n, {
 import { storage } from './storage'
 import { appListUrl, buildTime, version } from '../config'
 import axios from 'axios'
+import { isInPwa } from '../plugins/methods'
 
 export type DeviceType = 'Mobile' | 'Pad' | 'PC'
 export type LanguageType = Languages | 'system'
@@ -145,6 +146,11 @@ export const configMethods = {
 		async (language: LanguageType, thunkAPI) => {
 			thunkAPI.dispatch(configSlice.actions.setLanguage(language))
 
+			console.log(language)
+			// console.log(
+			//   'isInPwa',
+			//   isInPwa(),
+			// )
 			if (language === 'system') {
 				changeLanguage(detectionLanguage() as any)
 			} else {
@@ -152,6 +158,8 @@ export const configMethods = {
 			}
 
 			store.dispatch(configSlice.actions.setLang(getI18n().language))
+
+			console.log('language', language)
 
 			await storage.global.set('language', language)
 		}

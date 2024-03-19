@@ -9,16 +9,15 @@ import { initPublic } from './public'
 import { sakiui, meowApps } from '../config'
 import './i18n/i18n'
 import { useTranslation } from 'react-i18next'
+import { addSakiUI } from './methods'
 nyanyalog.timer()
 
 const Init = () => {
-	const { t, i18n } = useTranslation('')
-	const router = useRouter()
+	const { t, i18n } = useTranslation()
 	const dispatch = useDispatch<AppDispatch>()
-	const api = useSelector((state: RootState) => state.api)
-	const store = useStore()
 
 	useEffect(() => {
+		// addSakiUI()
 		initPublic()
 		const init = async () => {
 			await dispatch(methods.config.init()).unwrap()
@@ -26,25 +25,24 @@ const Init = () => {
 		init()
 	}, [])
 
-	// const lang =
-	// 	router.pathname.indexOf('[lang]') >= 0
-	// 		? router.asPath.split('/')[1]
-	// 		: 'en-US'
+  console.log("413213213")
 
 	return (
 		<>
 			<Head>
-				<title>
-					{t('appTitle', {
-						ns: 'common',
-					})}
-				</title>
-				<link rel='icon' href='./icons/icon.ico' />
-				<link rel='manifest' href={'/manifest.json'} />
-				<script noModule src={sakiui.jsurl}></script>
-				<script type='module' src={sakiui.esmjsurl}></script>
-				<script noModule src={meowApps.jsurl}></script>
-				<script type='module' src={meowApps.esmjsurl}></script>
+				<link rel='icon' href='/icons/icon.ico' />
+				<link rel='manifest' href='/manifest.json' />
+
+				<meta httpEquiv='X-UA-Compatible' content='IE=edge'></meta>
+				<meta
+					name='viewport'
+					content='width=device-width, initial-scale=1.0'
+				></meta>
+
+				<script noModule src={sakiui.jsurl} async></script>
+				<script type='module' src={sakiui.esmjsurl} async></script>
+				<script noModule src={meowApps.jsurl} async></script>
+				<script type='module' src={meowApps.esmjsurl} async></script>
 			</Head>
 		</>
 	)

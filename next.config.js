@@ -27,7 +27,7 @@ const nextConfig = withPWA({
 				output: 'export',
 		  }
 		: {}),
-	trailingSlash: true,
+	trailingSlash: false,
 	reactStrictMode: false,
 	swcMinify: false,
 	sassOptions: {
