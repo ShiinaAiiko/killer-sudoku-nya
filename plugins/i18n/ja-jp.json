@@ -42,7 +42,7 @@
 		"playNewGame": "ゲームをスタート",
 
 		"normalShare": "通常の共有",
-		"shareProblem": "質問とともに共有する",
+		"shareProblem": "問題とともに共有する",
 		"shareProblemContent": "友達を招待して、このナンプレ問題を一緒にプレイしてみませんか? (リンクを開いて友達もこのナンプレ問題をプレイできます)",
 
 		"haoToPlay": "キラーナンプレの遊び方は？",
@@ -56,7 +56,7 @@
 		"aboutKillerSudoku": "キラーナンプレについて",
 		"aboutKillerSudokuContent1": "キラーナンプレはすうどくから派生したバリエーションです。 ナンプレとカクロのゲームプレイを組み合わせたものです。",
 		"killerSudokuRule": "キラーナンプレゲームのルール",
-		"killerSudokuRuleContent1": "キラーナンプレは、点線で区切られた通常のナンプレルールに「領域」を追加します。点線ボックスの左上隅の下付き文字は領域の合計です。領域の合計は次のようになります。そこに含まれる数値の合計。同じ。",
+		"killerSudokuRuleContent1": "キラーナンプレは、点線で区切られた通常のナンプレルールに「領域」を追加します。点線ボックスの左上隅の下付き文字は領域の合計です。領域の合計はそこに含まれる数値の合計と同じです。",
 		"killerSudokuRuleContent2": "エリアに含まれる数字は繰り返されません。",
 		"killerSudokuRuleContent3": "一般的な合計とそれに含まれる数値は次のとおりです:",
 		"killerSudokuRuleContent4": "${number}つのセル",
@@ -75,9 +75,9 @@
 		"gamesWon": "合格",
 		"winRate": "合格率",
 		"time": "ゲーム時間",
-		"bestTime": "時間がかかるのが早い",
+		"bestTime": "一番速い",
 		"averageTime": "かかった平均時間",
-		"latestTime": "最後にかかった時間",
+		"latestTime": "一番遅い",
 		"gameTime": "ゲーム時間"
 	},
 	"prompt": {
@@ -99,7 +99,7 @@
 
 		"clearHistoricalStatistics": "履歴統計をクリア",
 		"clear": "クリア",
-		"clearHistoricalStatisticsContent": "履歴統計をクリアしてもよろしいですか? (これは元に戻せない操作です)",
+		"clearHistoricalStatisticsContent": "履歴統計をクリアしてもよろしいですか? (この操作は元に戻せません！)",
 		"clearuccessfully": "クリーンアップが成功しました!"
 	}
 }
