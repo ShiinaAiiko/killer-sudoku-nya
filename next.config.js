@@ -2,17 +2,18 @@
 const path = require('path')
 
 const withPWA = require('next-pwa')({
-	dest: 'public',
-	register: true,
-	skipWaiting: true,
-	runtimeCaching: [],
-	publicExcludes: [], // like this
-	// publicExcludes: ['!**/*'], // like this
-	buildExcludes: [() => true],
-	fallbacks: false,
-	cacheStartUrl: true,
-	dynamicStartUrl: true,
-	disable: process.env.NODE_ENV === 'development',
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  reloadOnOnline: false,
+  runtimeCaching: [],
+  publicExcludes: [], // like this
+  // publicExcludes: ['!**/*'], // like this
+  buildExcludes: [() => true],
+  fallbacks: false,
+  cacheStartUrl: true,
+  dynamicStartUrl: true,
+  disable: process.env.NODE_ENV === 'development',
 })
 // console.log(i18n)
 // console.log(i18n.i18n.locales)
@@ -24,30 +25,30 @@ const withPWA = require('next-pwa')({
 // var zhTW = require('./plugins/i18n/zh-tw.json')
 
 const nextConfig = withPWA({
-	// ...i18n,
-	// i18n: {
-	// 	defaultLocale: 'en-US',
-	// 	locales: ['en-US', 'zh-CN', 'zh-TW', 'ja-JP'],
-	// },
+  // ...i18n,
+  // i18n: {
+  // 	defaultLocale: 'en-US',
+  // 	locales: ['en-US', 'zh-CN', 'zh-TW', 'ja-JP'],
+  // },
 
-	...(process.env.OUTPUT === 'export'
-		? {
-				output: 'export',
-		  }
-		: {}),
-	trailingSlash: false,
-	reactStrictMode: false,
-	swcMinify: false,
-	sassOptions: {
-		includePaths: [path.join(__dirname, '.')],
-		prependData: `@import "./assets/style/base.scss";`,
-	},
-	env: {
-		DEFAULT_LANGUAGE: 'en-US',
-		// LANGUAGES: i18n.i18n.locales.join(','),
-		OUTPUT: process.env.OUTPUT,
-		DOCKER_LOCALHOST: process.env.DOCKER_LOCALHOST,
-	},
+  ...(process.env.OUTPUT === 'export'
+    ? {
+        output: 'export',
+      }
+    : {}),
+  trailingSlash: false,
+  reactStrictMode: false,
+  swcMinify: false,
+  sassOptions: {
+    includePaths: [path.join(__dirname, '.')],
+    prependData: `@import "./assets/style/base.scss";`,
+  },
+  env: {
+    DEFAULT_LANGUAGE: 'en-US',
+    // LANGUAGES: i18n.i18n.locales.join(','),
+    OUTPUT: process.env.OUTPUT,
+    DOCKER_LOCALHOST: process.env.DOCKER_LOCALHOST,
+  },
 })
 
 console.log('nextConfig', process.env.OUTPUT, nextConfig)

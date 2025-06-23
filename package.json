@@ -19,9 +19,9 @@
 		"workder1": "browserify  ./plugins/sudokuWorker.js > sudokuWorker1.js"
 	},
 	"dependencies": {
-		"@nyanyajs/utils": "^1.0.20",
+		"@nyanyajs/utils": "1.0.20",
 		"@reduxjs/toolkit": "^1.7.0",
-		"@saki-ui/core": "^1.0.3",
+		"@saki-ui/core": "1.0.3",
 		"axios": "^1.6.2",
 		"blueimp-md5": "^2.19.0",
 		"cross-env": "^7.0.3",

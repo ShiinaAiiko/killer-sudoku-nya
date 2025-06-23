@@ -267,7 +267,8 @@ const IndexLayout = ({ pageProps, children }: any): JSX.Element => {
 							{children}
 
 							{mounted ? (
-								<SakiTemplateFooter
+                <SakiTemplateFooter
+                  
 									onChangeLanguage={async (e) => {
 										// router.locale = e.detail
 										console.log(router, e)

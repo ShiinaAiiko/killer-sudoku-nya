@@ -13,39 +13,37 @@ import { addSakiUI } from './methods'
 nyanyalog.timer()
 
 const Init = () => {
-	const { t, i18n } = useTranslation()
-	const dispatch = useDispatch<AppDispatch>()
+  const { t, i18n } = useTranslation()
+  const dispatch = useDispatch<AppDispatch>()
 
-	useEffect(() => {
-		// addSakiUI()
-		initPublic()
-		const init = async () => {
-			await dispatch(methods.config.init()).unwrap()
-		}
-		init()
-	}, [])
+  useEffect(() => {
+    // addSakiUI()
+    initPublic()
+    const init = async () => {
+      await dispatch(methods.config.init()).unwrap()
+    }
+    init()
+  }, [])
 
-  console.log("413213213")
+  console.log('413213213')
 
-	return (
-		<>
-			<Head>
-				<link rel='icon' href='/icons/icon.ico' />
-				<link rel='manifest' href='/manifest.json' />
+  return (
+    <>
+      <Head>
+        <link rel="icon" href="/icons/icon.ico" />
+        <link rel="manifest" href="/manifest.json" />
 
-				<meta httpEquiv='X-UA-Compatible' content='IE=edge'></meta>
-				<meta
-					name='viewport'
-					content='width=device-width, initial-scale=1.0'
-				></meta>
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+        <script src="/js/sw-register.js" defer></script>
 
-				<script noModule src={sakiui.jsurl} async></script>
-				<script type='module' src={sakiui.esmjsurl} async></script>
-				<script noModule src={meowApps.jsurl} async></script>
-				<script type='module' src={meowApps.esmjsurl} async></script>
-			</Head>
-		</>
-	)
+        <script noModule src={sakiui.jsurl} async></script>
+        <script type="module" src={sakiui.esmjsurl} async></script>
+        <script noModule src={meowApps.jsurl} async></script>
+        <script type="module" src={meowApps.esmjsurl} async></script>
+      </Head>
+    </>
+  )
 }
 
 export default Init
