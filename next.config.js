@@ -1,13 +1,28 @@
 // const i18n = require('./next-i18next.config.js')
 const path = require('path')
+const { version } = require('./package.json')
 
 const withPWA = require('next-pwa')({
   dest: 'public',
+  cacheId: `sa-app-${version}`,
   register: true,
   skipWaiting: true,
   reloadOnOnline: false,
-  runtimeCaching: [],
-  publicExcludes: [], // like this
+  runtimeCaching: [
+    {
+      urlPattern: /\.(?:js|css|html|png|jpg|svg|woff2)$/, // 只缓存特定类型
+      handler: 'StaleWhileRevalidate',
+      options: {
+        cacheName: `sa-app-${version}`,
+      },
+    },
+  ],
+  publicExcludes: [
+    '/zh-TW/manifest*.json',
+    '/zh-CN/manifest*.json',
+    'manifest*.json',
+    'testData1.json',
+  ],
   // publicExcludes: ['!**/*'], // like this
   buildExcludes: [() => true],
   fallbacks: false,
@@ -36,6 +51,10 @@ const nextConfig = withPWA({
         output: 'export',
       }
     : {}),
+  assetPrefix:
+    process.env.NODE_ENV === 'development'
+      ? '/'
+      : 'https://cdn-sudoku.aiiko.club/',
   trailingSlash: false,
   reactStrictMode: false,
   swcMinify: false,
